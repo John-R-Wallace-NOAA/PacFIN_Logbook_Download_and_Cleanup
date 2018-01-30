@@ -52,11 +52,11 @@ sum(LB.ShortForm$POPlbs/2.20462 - LB.ShortForm$POP.kg) # sum = 0, testing new me
 LB.ShortForm$DURATION[LB.ShortForm$AGID  %in% 'W' & !is.na(LB.ShortForm$ADJ_TOWTIME)] <- LB.ShortForm$ADJ_TOWTIME[LB.ShortForm$AGID  %in% 'W' & !is.na(LB.ShortForm$ADJ_TOWTIME)]
 
 LB.ShortForm <- LB.ShortForm[
-			# tow duration	
-				(LB.ShortForm$DURATION > 0.2) &	      # records with tow duration > 0.2
-				(LB.ShortForm$DURATION <= 24.0) &     # records with tow duration <= 6 hours  
+            # tow duration    
+                (LB.ShortForm$DURATION > 0.2) &          # records with tow duration > 0.2
+                (LB.ShortForm$DURATION <= 24.0) &     # records with tow duration <= 6 hours  
                                 (!is.na(LB.ShortForm$DURATION)) 
-			, ]
+            , ]
 
 
 # Specify state waters where catch was taken - areas for analsyis using ARID_PSMFC

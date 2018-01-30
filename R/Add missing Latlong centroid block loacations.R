@@ -62,8 +62,8 @@ Dat$Best_Long[is.na(Dat$Best_Long)] <- Dat$BlkCentrd_Long[is.na(Dat$Best_Long)]
       print(xyplot(I(SET_LAT - BlkCentrd_Lat) ~ SET_LAT | factor(RYEAR), data = Dat[!(Dat$SET_LAT %in% 0) & Dat$AGID %in% AG,], panel = function(...) {panel.xyplot(...); panel.abline(v=42)}, main = AG))
     }
     Table(!is.na(Dat$BLOCK), !is.na(Dat$SET_LAT), Dat$AGID)
-    	
-    # Block min and max number by year and state agency	
+        
+    # Block min and max number by year and state agency    
     change(Dat)
     cbind(aggregate(list(Block.Min = BLOCK), List(RYEAR, AGID), min, na.rm=T), Block.Max = aggregate(List(BLOCK), List(RYEAR, AGID), max, na.rm=T)[,3])
     

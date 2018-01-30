@@ -7,60 +7,60 @@
 
 
 #header descriptions -  these are old and are from the 2013 analysis, but may still be usefull
-#"OBJECTID"	Unique ID for Row Number, same value as FID_ALL_LB…
-#"FID_ALL_LBhauls_87_09_SetPt" 	Unique ID for Set Point, same value as OBJECTID
-#"RYEAR" 	return year
-#"DRVID"	derived vessel ID, usually CG
-#"TRIP_ID"	Key to lbk_trip
-#"TOWNUM"	Key to lbk_tow                    
-#"AGID"		Data source agency ID
-#"RPCID"	PacFIN return port code (link to pc)
-#"bimo" 	bimontly period                      
-#"DDATE"	Date of departure, Orcale date truncated to 12 am
-#"RDATE"	Date of return, Orcale date truncated to 12 am
+#"OBJECTID"    Unique ID for Row Number, same value as FID_ALL_LB…
+#"FID_ALL_LBhauls_87_09_SetPt"     Unique ID for Set Point, same value as OBJECTID
+#"RYEAR"     return year
+#"DRVID"    derived vessel ID, usually CG
+#"TRIP_ID"    Key to lbk_trip
+#"TOWNUM"    Key to lbk_tow                    
+#"AGID"        Data source agency ID
+#"RPCID"    PacFIN return port code (link to pc)
+#"bimo"     bimontly period                      
+#"DDATE"    Date of departure, Orcale date truncated to 12 am
+#"RDATE"    Date of return, Orcale date truncated to 12 am
 #"TOWDATE"      tow date             
-#"SET_LAT"	latitude of set position converted from degrees/minutes to degrees.decimal
-#"SET_LONG"	longitude of set position converted from degrees/minutes to degrees.decimal
-#"UP_LAT"	lat at end of tow                    
-#"UP_LONG"	long at end of tow
-#"LATLONG_TYPE"	source of lat/long info,L = Logbook entry,C = Center of area, entered by agency staff                 #
+#"SET_LAT"    latitude of set position converted from degrees/minutes to degrees.decimal
+#"SET_LONG"    longitude of set position converted from degrees/minutes to degrees.decimal
+#"UP_LAT"    lat at end of tow                    
+#"UP_LONG"    long at end of tow
+#"LATLONG_TYPE"    source of lat/long info,L = Logbook entry,C = Center of area, entered by agency staff                 #
 #                    B = Center position of block, from the block_pos table
-#"SET_TIME"	time net was set (hhmm)                   
-#"UP_TIME"	time net was hauled up (hhmm)                               
-#"DURATION"	tow duration (up-set time) in hours
-#"ADJ_TOWTIME" 	WDFW adjusted tow time, represents missing logs as well.
+#"SET_TIME"    time net was set (hhmm)                   
+#"UP_TIME"    time net was hauled up (hhmm)                               
+#"DURATION"    tow duration (up-set time) in hours
+#"ADJ_TOWTIME"     WDFW adjusted tow time, represents missing logs as well.
                     #  This is the (logbook) extrapolated and adjusted tow time from WDFW. Best data availabe from WDFW.                              
-#"ARID_PSMFC"	PSMFC area ID, might be filled from block_pos table set position                                                                 
-#"BLOCK"	block number (10xl0 minutes): set position
-#"BLOCK_OR"	ODFW 5x5 minutes block number: set position                
-#"GRID"		Gear ID: a gear code, gear group or 'all'                                          
+#"ARID_PSMFC"    PSMFC area ID, might be filled from block_pos table set position                                                                 
+#"BLOCK"    block number (10xl0 minutes): set position
+#"BLOCK_OR"    ODFW 5x5 minutes block number: set position                
+#"GRID"        Gear ID: a gear code, gear group or 'all'                                          
 #"PACFIN_TARGET"tow species target
-#"FTID"		fish ticket identifier
-#"TICKET_DATE"	date on fish ticket                
-#"DEPTH1"	1st depth in fathoms (see depth_type1)                      
-#"PERMID_1"	permit number 1
-#"LEN_ENDOR_1"	vessel size  
-#"SPID"	        species ID 
+#"FTID"        fish ticket identifier
+#"TICKET_DATE"    date on fish ticket                
+#"DEPTH1"    1st depth in fathoms (see depth_type1)                      
+#"PERMID_1"    permit number 1
+#"LEN_ENDOR_1"    vessel size  
+#"SPID"            species ID 
 #"APOUNDS"      adjusted pounds
 #"APOUNDS_WDFW" Ticket adjusted pounds for WDFW only (representing missing logs as well) - 
               #      This is the (logbook) extrapolated and adjusted lbs from WDFW. Best data availabe from WDFW.          
 
-#"fltlbs"	flatfish lbs
-#"ptrlbs"	petrale lbs
+#"fltlbs"    flatfish lbs
+#"ptrlbs"    petrale lbs
 #"dovlbs"        dover lbs   
-#"rcklbs"	rockfish lbs
-#"thdlbs"	thornyhead lbs
-#"wdwlbs"	widow lbs                     
-#"sablbs"	sablefish lbs
-#"whtlbs"	whiting lbs
-#"gflbs"	total groundfish lbs                  
-#"ngflbs"	total non-groundfish lbs
-#"apounds"	check this, should be adjusted lbs? 
-#"latgrp"	jim's grouping               
-#"depgrp"	jim's grouping
-#"dtslbs"	dover,thornyhead,sablefish lbs
-#"SET_LATDD"	Set point latitude in decimal degrees
-#"SET_LONDD"	Set point longitude in decimal degrees
+#"rcklbs"    rockfish lbs
+#"thdlbs"    thornyhead lbs
+#"wdwlbs"    widow lbs                     
+#"sablbs"    sablefish lbs
+#"whtlbs"    whiting lbs
+#"gflbs"    total groundfish lbs                  
+#"ngflbs"    total non-groundfish lbs
+#"apounds"    check this, should be adjusted lbs? 
+#"latgrp"    jim's grouping               
+#"depgrp"    jim's grouping
+#"dtslbs"    dover,thornyhead,sablefish lbs
+#"SET_LATDD"    Set point latitude in decimal degrees
+#"SET_LONDD"    Set point longitude in decimal degrees
 
 
 ################################# READ IN LOGBOOK DATA ###########################################
@@ -86,14 +86,14 @@ save(LBData.1981.2015.Nov2017, file = "Funcs and Data/LBData.1981.2015.Nov2017.d
       if(F) {
       # For testing a new years worth of data, but changes to older years may happen
       Test.2016 <- PacFIN.Logbook.Data.by.Year(2016, uid = PacFIN.Login, pwd = PacFIN.PW)[, PacFinCols]
- 	  Test.2016$DDATE <- as.Date(Test.2016$DDATE, "%d-%b-%Y")
+       Test.2016$DDATE <- as.Date(Test.2016$DDATE, "%d-%b-%Y")
       Test.2016$RDATE <- as.Date(Test.2016$RDATE, "%d-%b-%Y")
       Test.2016$bimo <- ceiling(as.numeric(recode.simple(months(Test.2016$RDATE, T) , cbind(c("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"), 1:12)))/2)
       Test.2016$SET_LONG <- - Test.2016$SET_LONG
       Test.2016$Key <- paste(Test.2016$AGID, Test.2016$TRIP_ID, Test.2016$TOWNUM)  # Unique key 
-	  # base::load('Funcs and Data/LBData.1981.2016.Nov2017.dmp')
-	  dim(LBData.1981.2016.Nov2017)
-	  LBData.1981.2016.Nov2017 <- rbind(LBData.1981.2016.Nov2017, Test.2016)
+      # base::load('Funcs and Data/LBData.1981.2016.Nov2017.dmp')
+      dim(LBData.1981.2016.Nov2017)
+      LBData.1981.2016.Nov2017 <- rbind(LBData.1981.2016.Nov2017, Test.2016)
       }
 
 dim(LBData.1981.2015.Nov2017)

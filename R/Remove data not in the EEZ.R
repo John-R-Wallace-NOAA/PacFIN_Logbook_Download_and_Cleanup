@@ -9,11 +9,11 @@
         lib("ggplot2")
         lib("sp")
         lib("tidyr")
-		lib("tidyr")  # Needed to be loaded twice last time I tried - failed to load tidyr after depenencies were loaded!!
+        lib("tidyr")  # Needed to be loaded twice last time I tried - failed to load tidyr after depenencies were loaded!!
         lib("readr")
-		# Imap attached in Main
+        # Imap attached in Main
 
-		# Download EEZ.Polygon.WestCoast
+        # Download EEZ.Polygon.WestCoast
         # path.eez.world.hr <- ("W:/ALL_USR/JRW/Assessment/Petrale - Melissa/R/EEZ")
         # fnam.eez.world.hr <- "World_EEZ_v8_2014_HR.shp"
         # eez.world.lr <- readOGR(dsn = path.eez.world.hr, layer = file_path_sans_ext(fnam.eez.world.hr))
@@ -25,7 +25,7 @@
         load("Funcs and Data/EEZ.Polygon.WestCoast.dmp")
 
 
-		#  Using for sample_frac (dplyr) for a fraction of the data
+        #  Using for sample_frac (dplyr) for a fraction of the data
         ilines(list(world.h.land, dat.eez.usa2.mat), c(-135, -116), c(29.5, 49.5), zoom=F)
         
         xyplot(SET_LAT ~ SET_LONG | factor(RYEAR), data = sample_frac(Dat, 0.10))  # Shows if any (0, 0) lat-long in 'Dat'
@@ -34,15 +34,15 @@
         Dat$InsideEEZ <- as.logical(point.in.polygon(Dat$SET_LONG, Dat$SET_LAT, EEZ.Polygon.WestCoast[,1], EEZ.Polygon.WestCoast[,2]))  # Runs 30-60 mins.
         save(Dat, file="Funcs and Data/LB Shortform EEZ Dat 29 Nov 2017.dmp") # Backup for long run
 
-	    Data <- Dat[Dat$InsideEEZ, ]  # inside the EEZ
+        Data <- Dat[Dat$InsideEEZ, ]  # inside the EEZ
         DataOut <- Dat[!Dat$InsideEEZ, ] # Outside the EEZ
-	    nrow(Data)
-		nrow(DataOut)
-		
-		ilines(EEZ.Polygon.WestCoast, col='red', z= F)
+        nrow(Data)
+        nrow(DataOut)
+        
+        ilines(EEZ.Polygon.WestCoast, col='red', z= F)
         points(Data$SET_LONG, Data$SET_LAT)
 
-		ilines(EEZ.Polygon.WestCoast, col='red', z= F)
+        ilines(EEZ.Polygon.WestCoast, col='red', z= F)
         points(DataOut$SET_LONG, DataOut$SET_LAT)
 
         xyplot(SET_LAT ~ SET_LONG | factor(RYEAR), data = sample_frac(Data, 0.10), ylim = c(29.5, 50), xlim = c(-135, -116) ) # Sample_frac() is in the 'dplyr' package

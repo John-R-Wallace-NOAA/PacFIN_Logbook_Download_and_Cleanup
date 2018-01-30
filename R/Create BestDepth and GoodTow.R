@@ -26,10 +26,10 @@ Dat$BestDepth.m[is.na(Dat$BestDepth.m)] <- Dat$DepthGIS.m[is.na(Dat$BestDepth.m)
 
     # -----------  Look for reasonable depth difference between GIS and reported depth ---------------------
     
-	Dat$DepthDiff.m <- abs(Dat$DepthGIS.m - Dat$DEPTH1 * 1.8288 )
-	histogram(~ DepthDiff.m | factor(RYEAR), data = Dat, panel= function(...) {panel.histogram(...); panel.abline(v=c(250,500))})
+    Dat$DepthDiff.m <- abs(Dat$DepthGIS.m - Dat$DEPTH1 * 1.8288 )
+    histogram(~ DepthDiff.m | factor(RYEAR), data = Dat, panel= function(...) {panel.histogram(...); panel.abline(v=c(250,500))})
 
-	
+    
 # ================ Create GoodTow ======================================================
 
 
@@ -63,8 +63,8 @@ Dat$InDepthLimit <- Dat$BestDepth.m > 0.0 & Dat$BestDepth.m < 1281   # Best Dept
 Dat$GoodTow <-  (Dat$InsideAllPoly & Dat$InDepthDiffLimit & Dat$InDepthLimit) | 
                 (!is.na(Dat$BLOCK) & Dat$RYEAR <= 1996 & Dat$BestDepth.m > -100.0 & Dat$BestDepth.m < 2000) | 
                 (Dat$InsideAllPoly & Dat$GRID %in% 'MDT' & Dat$BestDepth.m <= 900*1.8288 )
-				
-# Missing good tows are not good tows				
+                
+# Missing good tows are not good tows                
 Table(Dat$RYEAR, Dat$GoodTow) 
 Dat$GoodTow[is.na(Dat$GoodTow)] <- FALSE
 Table(Dat$RYEAR, Dat$GoodTow) 
@@ -104,7 +104,7 @@ xyplot(DepthGIS.m ~ DEPTH1*1.8288 | factor(RYEAR), panel = function(...) { panel
  # DEPTH1 (red, converted to meters). Jitter (blue) to show DepthGIS.m data in blocks; green is no jitter for DepthGIS.m
      graphics.off()
         # windows()
-		dir.create("Figs/Lat_by_Depth_Clean/", recursive = TRUE)
+        dir.create("Figs/Lat_by_Depth_Clean/", recursive = TRUE)
         png("Figs/Lat_by_Depth_Clean/Lat_by_Depth_Clean%03d.png", 960, 960)
         List.6 <- list(); List.6[[1]] <- 1:6 + 1980; List.6[[2]] <- 7:12 + 1980; List.6[[3]] <- 13:18 + 1980; List.6[[4]] <- 19:24 + 1980; List.6[[5]] <- 25:30 + 1980; List.6[[6]] <- 31:35 + 1980
         for ( j in 1:6) {

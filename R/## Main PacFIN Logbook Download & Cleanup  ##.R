@@ -60,11 +60,14 @@ dir.create('Funcs and Data')
 	    # Skip all above
 	    # load("Funcs and Data/LB Shortform unfiltered Dat 8 Dec 2017.dmp")
 
-     # Remove data not in the EEZ and define polygons of reasonable catch area		
+		
+     # Remove data not in the EEZ
+	 source('Remove data not in the EEZ.R') 
+	 	 
+	 # Define the coastwide and bank polygon only once using the EEZ polygon and data from 2010-2015 
 	 # ***** Unless this is changed by committe or there is some significant change in where fish are caught (major undersea earthquake?) then I see no reason to change 
 	 #        these polygons and I plan to use them in the future and they will be provided for others in GitHub ***** 	
-     source('Remove data not in the EEZ.R') 
-     source('Define polygons of reasonable catch area.R')  # The code for defining the polygons of reasonable catch area is commented out.
+     source('Define polygons of reasonable catch area.R')  # The code for defining the polygons of reasonable catch area is in a FALSE 'if' statement in lieu of code to download polygons from GitHub.
 	    # Skip all above
         # load("Funcs and Data/LB Polygons Dat 8 Dec 2017.dmp") # Dat in R
 

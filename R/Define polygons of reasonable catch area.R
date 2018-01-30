@@ -5,62 +5,70 @@
 
 
  ########## Define the coastwide and bank polygon only once using the EEZ polygon and data from 2010-2015 ###########
-  if(F) {
-    # Get coastwide polygon for everything except the bank
-    
-    DATA <- Dat[Dat$RYEAR %in% 2010:2015 & Dat$InsideEEZ & Dat$SET_LONG < -115, c("SET_LONG", "SET_LAT")]
-    DATA <- DATA[!duplicated(paste(DATA$SET_LONG, DATA$SET_LAT)),]
-    DATA <- DATA[ !(DATA$SET_LONG > -124.5475 & DATA$SET_LAT > 48.12235),]  # No Puget Sound
-    DATA$Index <- 1:nrow(DATA)
-    
-    # png("Figs/Convex hull on the logbook data with outlying data.png")
-    plot(DATA.ahull <-  ahull(DATA$SET_LONG, DATA$SET_LAT, alpha = 0.35), xlab = "Longitude", ylab="Latitude")
-    
-    
-    PointsOut <- select.pts(DATA)
-    PointsOut <- rbind(PointsOut, select.pts(DATA)) # Repeat as needed
-    
-    # Get polygon for the bank
-    Bank <- select.pts(DATA)
-    
-    DATA.hull <- DATA[!(DATA$Index %in% rbind(PointsOut, Bank)$Index), ]
-    
-    plot(DATA.hull[,-3])
-    lines(DATA.inla.boundary <- inla.nonconvex.hull(as.matrix(DATA.hull[,-3]), convex=0.2, res = c(49,84)), col='red')
-    
-    # Second pass
-    
-    (PointsOut2 <- select.pts(DATA.hull))
-    PointsOut2 <- rbind(PointsOut2, select.pts(DATA.hull)) # Repeat as needed
-    
-    DATA.hull <- DATA[!(DATA$Index %in% rbind(PointsOut[-8,], PointsOut2, Bank)$Index), ]
-    
-    
-    
-    # imap(longrange=c(-129, -112.7), latrange=c(32.0, 50.5), zoom=F)
-    windows(width = 4.5, height = 8.6)
-    plot(DATA.hull[,-3], xlab = "Longitude", ylab="Latitude", xlim=c(-128, -117))
-    # points(DATA.hull[,-3])
-    lines(DATA.inla.boundary <- inla.nonconvex.hull(as.matrix(DATA.hull[,-3]), convex=0.2,  concave = 0.3, res = c(49,84)), col='red')
-    # lines(DATA.inla.boundary <- inla.nonconvex.hull(as.matrix(DATA.hull[,-3]), convex=0.18, res = c(63,110)), col='green')
-    # lines(DATA.inla.boundary <- inla.nonconvex.hull(as.matrix(DATA.hull[,-3]), convex=0.22, res = c(49,84)), col='blue')
-    
-    points(Bank, col='green')
-    
-    lines(Bank.inla.boundary <- inla.nonconvex.hull(as.matrix(Bank[,-3]), convex=0.2, concave = 0.3, res = c(49,84)), col='red')
-    # lines(Bank.inla.boundary <- inla.nonconvex.hull(as.matrix(Bank[,-3]), convex=0.18, res = c(49,84)), col='green')
-    
-    points(DATA[(DATA$Index %in% rbind(PointsOut[-8,], PointsOut2)$Index), ], col='blue') # Data that is out
-    
-    
-    
-    CoastWidePolygon <- rbind(DATA.inla.boundary$loc, DATA.inla.boundary$loc[1,]) # Close up to create polygon
-    BankPolygon <- rbind(Bank.inla.boundary$loc, Bank.inla.boundary$loc[1,]) # Close up to create polygon
-    
-    
-    PointsOut.Bank <- rbind(PointsOut[-8,], PointsOut2, Bank)
-    save(PointsOut.Bank, CoastWidePolygon, BankPolygon, file = 'Funcs and Data/Points.out.of.Dat.and.polygons.dmp')
+if(FALSE) {
+      # Get coastwide polygon for everything except the bank
+      
+      DATA <- Dat[Dat$RYEAR %in% 2010:2015 & Dat$InsideEEZ & Dat$SET_LONG < -115, c("SET_LONG", "SET_LAT")]
+      DATA <- DATA[!duplicated(paste(DATA$SET_LONG, DATA$SET_LAT)),]
+      DATA <- DATA[ !(DATA$SET_LONG > -124.5475 & DATA$SET_LAT > 48.12235),]  # No Puget Sound
+      DATA$Index <- 1:nrow(DATA)
+      
+      # png("Figs/Convex hull on the logbook data with outlying data.png")
+      plot(DATA.ahull <-  ahull(DATA$SET_LONG, DATA$SET_LAT, alpha = 0.35), xlab = "Longitude", ylab="Latitude")
+      
+      
+      PointsOut <- select.pts(DATA)
+      PointsOut <- rbind(PointsOut, select.pts(DATA)) # Repeat as needed
+      
+      # Get polygon for the bank
+      Bank <- select.pts(DATA)
+      
+      DATA.hull <- DATA[!(DATA$Index %in% rbind(PointsOut, Bank)$Index), ]
+      
+      plot(DATA.hull[,-3])
+      lines(DATA.inla.boundary <- inla.nonconvex.hull(as.matrix(DATA.hull[,-3]), convex=0.2, res = c(49,84)), col='red')
+      
+      # Second pass
+      
+      (PointsOut2 <- select.pts(DATA.hull))
+      PointsOut2 <- rbind(PointsOut2, select.pts(DATA.hull)) # Repeat as needed
+      
+      DATA.hull <- DATA[!(DATA$Index %in% rbind(PointsOut[-8,], PointsOut2, Bank)$Index), ]
+      
+      
+      
+      # imap(longrange=c(-129, -112.7), latrange=c(32.0, 50.5), zoom=F)
+      windows(width = 4.5, height = 8.6)
+      plot(DATA.hull[,-3], xlab = "Longitude", ylab="Latitude", xlim=c(-128, -117))
+      # points(DATA.hull[,-3])
+      lines(DATA.inla.boundary <- inla.nonconvex.hull(as.matrix(DATA.hull[,-3]), convex=0.2,  concave = 0.3, res = c(49,84)), col='red')
+      # lines(DATA.inla.boundary <- inla.nonconvex.hull(as.matrix(DATA.hull[,-3]), convex=0.18, res = c(63,110)), col='green')
+      # lines(DATA.inla.boundary <- inla.nonconvex.hull(as.matrix(DATA.hull[,-3]), convex=0.22, res = c(49,84)), col='blue')
+      
+      points(Bank, col='green')
+      
+      lines(Bank.inla.boundary <- inla.nonconvex.hull(as.matrix(Bank[,-3]), convex=0.2, concave = 0.3, res = c(49,84)), col='red')
+      # lines(Bank.inla.boundary <- inla.nonconvex.hull(as.matrix(Bank[,-3]), convex=0.18, res = c(49,84)), col='green')
+      
+      points(DATA[(DATA$Index %in% rbind(PointsOut[-8,], PointsOut2)$Index), ], col='blue') # Data that is out
+      
+      
+      
+      CoastWidePolygon <- rbind(DATA.inla.boundary$loc, DATA.inla.boundary$loc[1,]) # Close up to create polygon
+      BankPolygon <- rbind(Bank.inla.boundary$loc, Bank.inla.boundary$loc[1,]) # Close up to create polygon
+      
+      
+      PointsOut.Bank <- rbind(PointsOut[-8,], PointsOut2, Bank)
+      save(PointsOut.Bank, CoastWidePolygon, BankPolygon, file = 'Funcs and Data/Points.out.of.Dat.and.polygons.dmp')
+
+} else {
+
+      # Load EEZ.Polygon.WestCoast, CoastWidePolygon, and BankPolygon from GitHub
+
+      download.file("https://cdn.rawgit.com/John-R-Wallace/PacFIN_Logbook_Download_and_Cleanup/master/R/Funcs and Data/EEZ.Polygon.WestCoast.dmp", "Funcs and Data/EEZ.Polygon.WestCoast.dmp", mode = 'wb')
+      download.file("https://cdn.rawgit.com/John-R-Wallace/PacFIN_Logbook_Download_and_Cleanup/master/R/Funcs and Data/Points.out.of.Dat.and.polygons.dmp", "Funcs and Data/Points.out.of.Dat.and.polygons.dmp", mode = 'wb')
 }
+
 
 # Load EEZ polygon
 load("Funcs and Data/EEZ.Polygon.WestCoast.dmp")

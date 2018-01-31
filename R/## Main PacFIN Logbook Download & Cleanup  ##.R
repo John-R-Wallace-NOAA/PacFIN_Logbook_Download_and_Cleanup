@@ -12,19 +12,18 @@ dir.create('Funcs and Data')
 # GitHub package loads (comment out the if() statements for upgrading packages)
     if (!any(installed.packages()[, 1] %in% "devtools"))  install.packages('devtools')  
 	
-	devtools::install_github("John-R-Wallace/JRWToolBox", quiet = T)
-	if (!any(installed.packages()[, 1] %in% "JRWToolBox"))
+    devtools::install_github("John-R-Wallace/JRWToolBox", quiet = T)
+    if (!any(installed.packages()[, 1] %in% "JRWToolBox"))
 	    stop('JRWToolBox is not installed, an attempt to install failed (check for GitHub internet access)')
    require(JRWToolBox)
    
-   lib("John-R-Wallace/Imap")
+   lib("John-R-Wallace/Imap") # JRWToolBox::lib() installs a CRAN package only if needed and regardless will load the package into the R session
 
    if (!any(installed.packages()[, 1] %in% "INLA")) 
       source("http://www.math.ntnu.no/inla/givemeINLA.R")  
    require(INLA)
-
      
-   lib(alphahull)  # JRWToolBox::lib() installs a CRAN package only if needed and regardless will load the package into the R session
+   lib(alphahull)  
    lib(lattice)
    lib(rgdal)
    lib(dplyr)

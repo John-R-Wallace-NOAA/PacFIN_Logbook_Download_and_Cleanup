@@ -121,19 +121,21 @@ save(Dat, file = "Petrale Dat 6 Oct 2016.dmp") # *** This 'Dat' has "InsideEEZ, 
 }
 
 # A new LL.unique.All (LL.unique.All 05 Dec 2017.dmp) data frame was created using the older Dat (which has missing block centroid lat/long added in the first round)
-# This is provided in 'Funcs and Data' and used below
+# This is provided in 'Funcs and Data' on GitHub and used below.
 
-            if(F) {
-                # Get all unique lat/long GIS Depths from the older Dat
-                Dat.NEW <- Dat
-                base::load("Funcs and Data/LB Shortform Blank Dat 10 Mar 2017.dmp")
-                Dat.OLD <- Dat
-                Dat <- Dat.NEW
-                rm(Dat.NEW)
-                Dat.OLD$LL.Key <- paste(Dat.OLD$SET_LONG, Dat.OLD$SET_LAT)  
-                LL.unique.All <- Dat.OLD[!duplicated(Dat.OLD$LL.Key), c('SET_LONG', 'SET_LAT', 'LL.Key', 'DepthGIS.m')]
-                save(LL.unique.All, file= 'Funcs and Data/LL.unique.All 05 Dec 2017.dmp')
-            }
+if(F) {
+    # Get all unique lat/long GIS Depths from the older Dat
+    Dat.NEW <- Dat
+    base::load("Funcs and Data/LB Shortform Blank Dat 10 Mar 2017.dmp")
+    Dat.OLD <- Dat
+    Dat <- Dat.NEW
+    rm(Dat.NEW)
+    Dat.OLD$LL.Key <- paste(Dat.OLD$SET_LONG, Dat.OLD$SET_LAT)  
+    LL.unique.All <- Dat.OLD[!duplicated(Dat.OLD$LL.Key), c('SET_LONG', 'SET_LAT', 'LL.Key', 'DepthGIS.m')]
+    save(LL.unique.All, file= 'Funcs and Data/LL.unique.All 05 Dec 2017.dmp')
+} else
+    download.file("https://cdn.rawgit.com/John-R-Wallace/PacFIN_Logbook_Download_and_Cleanup/master/R/Funcs and Data/Points.out.of.Dat.and.polygons.dmp", "Funcs and Data/LL.unique.All 05 Dec 2017.dmp", mode = 'wb')
+
 
 # Match lat/long pair key to add DepthGIS.m (m = meters) to the new Dat from the saved unique lat/longs pairs.
 load('Funcs and Data/LL.unique.All 05 Dec 2017.dmp')

@@ -12,7 +12,7 @@ dir.create('Funcs and Data')
 # GitHub package loads (comment out the if() statements for upgrading packages)
     if (!any(installed.packages()[, 1] %in% "devtools"))  install.packages('devtools')  
 	
-	devtools::install_github("John-R-Wallace/R-ToolBox", quiet = T)
+	devtools::install_github("John-R-Wallace/JRWToolBox", quiet = T)
 	if (!any(installed.packages()[, 1] %in% "JRWToolBox"))
 	    stop('JRWToolBox is not installed, an attempt to install failed (check for GitHub internet access)')
    require(JRWToolBox)

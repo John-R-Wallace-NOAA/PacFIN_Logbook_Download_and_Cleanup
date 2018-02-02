@@ -3,8 +3,8 @@
 
 # For all tows, add GIS depth with depthMeters() function which is now part of the Imap package 
 
-# After first round most unique lat/longs pairs have GIS depths, so only the new lat/long pairs need to be added (see below)
-if(F) {
+# After first round most unique lat/longs pairs have GIS depths, so only the new lat/long pairs may need to be added (see below)
+if(T) {
 
      Dat$LL.Key <- paste(Dat$SET_LONG, Dat$SET_LAT)
      LL.unique <- Dat[!duplicated(Dat$LL.Key), c("SET_LONG", "SET_LAT", "LL.Key")]
@@ -12,9 +12,6 @@ if(F) {
      LL.unique$DepthGIS <- NA
      LL.unique <- LL.unique[!is.na(LL.unique$SET_LONG) | !is.na(LL.unique$SET_LAT),]
      LL.unique <- LL.unique[LL.unique$SET_LONG != 0,]
-     
-     # save(LL.unique, file='LL.unique.1981-2015 5 Oct 2015.dmp')
-     
      
      system.time(LL.unique$DepthGIS[1:5000] <-  depthMeters(LL.unique[1:5000, c("SET_LONG", "SET_LAT")]))
      system.time(LL.unique$DepthGIS[5001:10000] <-  depthMeters(LL.unique[5001:10000, c("SET_LONG", "SET_LAT")]))
@@ -28,11 +25,11 @@ if(F) {
      system.time(LL.unique$DepthGIS[80001:90000] <-  depthMeters(LL.unique[80001:90000, c("SET_LONG", "SET_LAT")]))
      system.time(LL.unique$DepthGIS[90001:100000] <- depthMeters(LL.unique[90001:100000, c("SET_LONG", "SET_LAT")]))
      
-     save(LL.unique, file='LL.unique.1981-2015 6 Oct 2015.dmp')
+     save(LL.unique, file='LL.unique.1981-2015 05 Dec 2017.dmp')
        
      
-     # On Vanilla R 1
-     # load("W:\\ALL_USR\\JRW\\Assessment\\Petrale - Melissa\\R\\LL.unique.1981-2015 5 Oct 2015.dmp")
+     # On new R session 1
+     load("LL.unique.1981-2015 05 Dec 2017.dmp")
      library(JRWToolBox)
      library(Imap)
      
@@ -52,8 +49,8 @@ if(F) {
      save(LL.unique.100k, file = "LL.unique.100k.dmp")
      
      
-     # On Vanilla R 2
-     # load("W:\\ALL_USR\\JRW\\Assessment\\Petrale - Melissa\\R\\LL.unique.1981-2015 5 Oct 2015.dmp")
+     # On new R session 2
+     load("LL.unique.1981-2015 05 Dec 2017.dmp")
      library(JRWToolBox)
      library(Imap)
      
@@ -73,8 +70,8 @@ if(F) {
      save(LL.unique.200k, file = "LL.unique.200k.dmp")
      
      
-     # On Vanilla R 3
-     # load("W:\\ALL_USR\\JRW\\Assessment\\Petrale - Melissa\\R\\LL.unique.1981-2015 5 Oct 2015.dmp")
+     # On new R session 3
+     load("LL.unique.1981-2015 05 Dec 2017.dmp")
      library(JRWToolBox)
      library(Imap)
      
@@ -95,49 +92,23 @@ if(F) {
      save(LL.unique.300k, file = "LL.unique.300k.dmp")
      
      
-     
-     load("W:\\ALL_USR\\JRW\\Assessment\\Petrale - Melissa\\R\\LL.unique.100k.dmp")
-     load("W:\\ALL_USR\\JRW\\Assessment\\Petrale - Melissa\\R\\LL.unique.200k.dmp")
-     load("W:\\ALL_USR\\JRW\\Assessment\\Petrale - Melissa\\R\\LL.unique.300k.dmp")
+     # Move LL.unique.100k.dmp, LL.unique.200k.dmp, and LL.unique.300k.dmp to the main R's working directory or add the paths below	 
+     load("LL.unique.100k.dmp")
+     load("LL.unique.200k.dmp")
+     load("LL.unique.300k.dmp")
      
      LL.unique.All <- rbind(LL.unique[1:100000,], LL.unique.100k, LL.unique.200k, LL.unique.300k)
      LL.unique.All <- LL.unique.All[!duplicated(LL.unique.All$LL.Key),]
      
      names(LL.unique.All)[4] <- "DepthGIS.m"
-     save(LL.unique.All, file = "Funcs and Data/LL.unique.All 06 Oct 2016.dmp")  # All unique lat/longs in and outside of the EEZ 1981-2015
-     
-
-Dat$LL.Key <- paste(Dat$SET_LONG, Dat$SET_LAT)
-Dat$LL.Key[Dat$LL.Key == "NA NA"] <- NA
-Dat <- match.f(Dat, LL.unique.All, "LL.Key", "LL.Key", "DepthGIS.m")
-sum(is.na(Dat$DepthGIS.m)) # 68,173
-Table(Dat$RYEAR, !is.na(Dat$DepthGIS.m))
-
-# BLOCK_OR is either NA or '0' so remove - if it exists
-Table(Dat$BLOCK_OR) 
-Dat$BLOCK_OR <- NULL
-
-save(Dat, file = "Petrale Dat 6 Oct 2016.dmp") # *** This 'Dat' has "InsideEEZ, LL.Key, and 'DepthGIS.m' ***
+     save(LL.unique.All, file = "Funcs and Data/LL.unique.All 05 Dec 2017.dmp")  # All unique lat/longs in and outside of the EEZ 1981-2015
+    
+} else {
+     # Not sure if PacFIN Lat/Long tow locations with GIS depths, but no other meta-data would be allowed on GitHub - so no unique lat/longs pairs on GitHub for now
+     download.file("https://cdn.rawgit.com/John-R-Wallace/PacFIN_Logbook_Download_and_Cleanup/master/R/Funcs and Data/Points.out.of.Dat.and.polygons.dmp", "Funcs and Data/LL.unique.All 05 Dec 2017.dmp", mode = 'wb')
 }
 
-# A new LL.unique.All (LL.unique.All 05 Dec 2017.dmp) data frame was created using the older Dat (which has missing block centroid lat/long added in the first round)
-# This is provided in 'Funcs and Data' on GitHub and used below.
-
-if(F) {
-    # Get all unique lat/long GIS Depths from the older Dat
-    Dat.NEW <- Dat
-    base::load("Funcs and Data/LB Shortform Blank Dat 10 Mar 2017.dmp")
-    Dat.OLD <- Dat
-    Dat <- Dat.NEW
-    rm(Dat.NEW)
-    Dat.OLD$LL.Key <- paste(Dat.OLD$SET_LONG, Dat.OLD$SET_LAT)  
-    LL.unique.All <- Dat.OLD[!duplicated(Dat.OLD$LL.Key), c('SET_LONG', 'SET_LAT', 'LL.Key', 'DepthGIS.m')]
-    save(LL.unique.All, file= 'Funcs and Data/LL.unique.All 05 Dec 2017.dmp')
-} else
-    download.file("https://cdn.rawgit.com/John-R-Wallace/PacFIN_Logbook_Download_and_Cleanup/master/R/Funcs and Data/Points.out.of.Dat.and.polygons.dmp", "Funcs and Data/LL.unique.All 05 Dec 2017.dmp", mode = 'wb')
-
-
-# Match lat/long pair key to add DepthGIS.m (m = meters) to the new Dat from the saved unique lat/longs pairs.
+# Match lat/long pair key to add DepthGIS.m (m = meters) to Dat from the saved unique lat/longs pairs.
 load('Funcs and Data/LL.unique.All 05 Dec 2017.dmp')
 Dat$LL.Key <- paste(Dat$Best_Long, Dat$Best_Lat)
 Dat <- match.f(Dat, LL.unique.All, "LL.Key", "LL.Key", "DepthGIS.m")  
@@ -146,8 +117,7 @@ sum(is.na(Dat$DepthGIS.m)) # 46,222  (OLD = 68,173)
 Table(Dat$RYEAR, is.finite(Dat$DepthGIS.m))
 
 
-
-#  Find new GIS depths 
+#  Find any new GIS depths (this may or may not be needed depending on the age of saved unique lat/longs pairs)
 
 TF <- (!is.na(Dat$SET_LAT) & Dat$SET_LAT!= 0 & !is.na(Dat$SET_LONG) &  Dat$SET_LONG!= 0 & is.na(Dat$DepthGIS.m))
 sum(TF) # 3
@@ -161,7 +131,6 @@ Dat$DepthGIS.m[TF] <- Missing.LL$DepthGIS.m
 sum(!is.na(Dat$SET_LAT) & Dat$SET_LAT!= 0 & !is.na(Dat$SET_LONG) &  Dat$SET_LONG!= 0 & is.na(Dat$DepthGIS.m)) 
 # 1 tow left which is far outside the polygons 
 Dat[!is.na(Dat$SET_LAT) & Dat$SET_LAT!= 0 & !is.na(Dat$SET_LONG) &  Dat$SET_LONG!= 0 & is.na(Dat$DepthGIS.m),]  
-
 
 
 # For the Dat file, need to redo bimo (bimonthly), add Month as a factor, and change GRID and AGID to factors

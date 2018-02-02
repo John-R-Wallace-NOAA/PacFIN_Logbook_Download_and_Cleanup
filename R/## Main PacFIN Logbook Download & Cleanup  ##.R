@@ -4,26 +4,27 @@
 
 ################################# Set the PacFIN Logbook Download directory and load required packages ######################
 
-# Edit the working directory below as desired, the sourced R code needs to be in this directory and the polygon save()'d files (*.dmp) will be put into the subdirectoy 'Funcs and Data'
-#           All saved data frames will also be in 'Funcs and Data'.
+# Edit the working directory below as desired, the source()'d R code (see below) needs to be in this directory and the save()'d support 
+#      data frames (e.g. polygon files) will be put into the subdirectory 'Funcs and Data'.  All saved data frames will also be in 'Funcs and Data'.
+    
 setwd("C:/PacFIN Logbook Download & Cleanup") 
 dir.create('Funcs and Data')
 
 # GitHub package loads (comment out the if() statements for upgrading packages)
-    if (!any(installed.packages()[, 1] %in% "devtools"))  install.packages('devtools')  
-	
-    devtools::install_github("John-R-Wallace/JRWToolBox", quiet = T)
-    if (!any(installed.packages()[, 1] %in% "JRWToolBox"))
-	    stop('JRWToolBox is not installed, an attempt to install failed (check for GitHub internet access)')
-   require(JRWToolBox)
-   
-   lib("John-R-Wallace/Imap") # JRWToolBox::lib() installs a CRAN package only if needed and regardless will load the package into the R session
+   if (!any(installed.packages()[, 1] %in% "JRWToolBox")) 
+      devtools::install_github("John-R-Wallace/R-ToolBox")
+   require(JRWToolBox) 
+
+   if (!any(installed.packages()[, 1] %in% "Imap")) 
+      devtools::install_github("John-R-Wallace/Imap")
+   require(IMAP)
 
    if (!any(installed.packages()[, 1] %in% "INLA")) 
       source("http://www.math.ntnu.no/inla/givemeINLA.R")  
    require(INLA)
+
      
-   lib(alphahull)  
+   lib(alphahull)  # JRWToolBox::lib() installs a CRAN package only if needed and regardless will load the package into the R session
    lib(lattice)
    lib(rgdal)
    lib(dplyr)
@@ -65,8 +66,8 @@ dir.create('Funcs and Data')
      source('Remove data not in the EEZ.R') 
           
      # Define the coastwide and bank polygon only once using the EEZ polygon and data from 2010-2015 
-     # ***** Unless this is changed by committe or there is some significant change in where fish are caught (major undersea earthquake?) then I see no reason to change 
-     #        these polygons and I plan to use them in the future and they will be provided for others in GitHub *****     
+     # ***** Unless this is changed by committee or there is some significant change in where fish are caught (major undersea earthquake?), then I see no reason to change 
+     #        these polygons. I plan to use them in the future and they will be provided for others in GitHub *****     
      source('Define polygons of reasonable catch area.R')  # The code for defining the polygons of reasonable catch area is in a FALSE 'if' statement in lieu of code to download polygons from GitHub.
         # Skip all above
         # load("Funcs and Data/LB Polygons Dat 8 Dec 2017.dmp") # Dat in R

@@ -4,7 +4,7 @@
 
 ################################# Set the PacFIN Logbook Download directory and load required packages ######################
 
-# Edit the working directory below as desired, the source()'d R code (see below) needs to be in this directory and the save()'d support 
+# Edit the working directory below as desired; the source()'d R code (see below) needs to be in this directory and the save()'d support 
 #      data frames (e.g. polygon files) will be put into the subdirectory 'Funcs and Data'.  All saved data frames will also be in 'Funcs and Data'.
     
 setwd("C:/PacFIN Logbook Download & Cleanup") 

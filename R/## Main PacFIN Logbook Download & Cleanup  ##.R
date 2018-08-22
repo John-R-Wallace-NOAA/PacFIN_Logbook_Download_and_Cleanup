@@ -84,14 +84,14 @@ dir.create('Funcs and Data')
 
         
      # Create 'BestDepth' and 'GoodTow' columns
-     source('Create BestDepth and GoodTow.R')  # Looking for a reasonable midwater depth limit is here
+     # ******** LB.ShortForm is 'Dat' with only good tows (LB.ShortForm <- Dat[Dat$GoodTow, ]) ******
+     source('Create BestDepth and GoodTow.R')  # Looking for a reasonable midwater depth limit is here along with LB.ShortForm <- Dat[Dat$GoodTow, ]
         # Skip all of above
         # load('Funcs and Data/LB Shortform Final Dat 25 Jan 2018.dmp') # LB.ShortForm in R
 
         
      # Add additional species to LB Shortform base file and remove the Hake Strategy tows (*** May want to leave in Hake tows for Sablefish ***)
-     # ******** LB.ShortForm is 'Dat' with only good tows (LB.ShortForm <- Dat[Dat$GoodTow,]) ******
-     source('Add species to LB Shortform.R') # LB.ShortForm <- Dat[Dat$GoodTow,] is in here
+        source('Add species to LB Shortform.R')
         # Skip all of above:
         # load('Funcs and Data/LB ShortForm No Hake Strat 26 Jan 2018.dmp') # LB.ShortForm.No.Hake.Strat in R
         

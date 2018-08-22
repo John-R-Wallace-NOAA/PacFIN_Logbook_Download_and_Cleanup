@@ -1,11 +1,11 @@
 
 
 
-# Add species to the 'Dat' file , each row of 'LB.ShortForm' will be a unique tow and the species catch (kg) will be in added columns
+# Add species to the 'LB.ShortForm' file, each row of 'LB.ShortForm' will be a unique tow and the species catch (kg) will be in added columns
 
-base::load("Funcs and Data/LBData.1981.2015.dmp")  # Load main raw data, if not already loaded, used inside of PacFIN.Logbook.Catch.Effort.Sp() below
+base::load("Funcs and Data/LBData.1981.2015.Nov2017.dmp")  # Load main raw data, if not already loaded, used inside of PacFIN.Logbook.Catch.Effort.Sp() below
 
-sort(unique(LBData.1981.2015$SPID))
+sort(unique(LBData.1981.2015.Nov2017$SPID))
 #   [1] "ALBC" "ARR1" "ART1" "ARTH" "ASRK" "BCC1" "BGL1" "BLK1" "BLU1" "BMO1" "BNK1" "BRW1" "BRZ1" "BSKT" "BSOL" "BSRK" "BSRM" "BTCR" "BTRY"
 #  [20] "BYL1" "CBZ1" "CBZN" "CHL1" "CHLB" "CHN1" "CHNK" "CLP1" "CMCK" "CMSL" "CNR1" "COP1" "CSKT" "CSOL" "CSRK" "CUDA" "CWC1" "DBR1" "DCRB"
 #  [39] "DOVR" "DSOL" "DSRK" "DVR1" "EELS" "EGL1" "EGLS" "EULC" "FLG1" "FNTS" "FSOL" "GBAS" "GBL1" "GPH1" "GRDR" "GRS1" "GSP1" "GSR1" "GSTG"
@@ -22,7 +22,7 @@ sort(unique(LBData.1981.2015$SPID))
 
 # *************************************** Good tows only *******************************************
 
-load("Funcs and Data/LB Shortform Final Dat 25 Jan 2018.dmp") # Only good tows in LB.ShortForm # rows = 1,033,637,  cols =  46
+load("Funcs and Data/LB Shortform Final Dat 25 Jan 2018.dmp") # Only good tows in LB.ShortForm # rows = 1,033,637,  cols = 46
 source("Funcs and Data/PacFIN.Logbook.Catch.Effort.Sp.R") # Species or species group aggregate catch
 
 
@@ -34,7 +34,7 @@ SP.List <- list(LCOD.kg = c("LCOD", "LCD1"), POP.kg = c("POP1", "POP2", "UPOP"))
 
 for ( i in 1:length(SP.List)) {
      cat("\n", names(SP.List)[i], "\n"); flush.console()
-     tmp <- PacFIN.Logbook.Catch.Effort.Sp(SP.List[[i]])
+     tmp <- PacFIN.Logbook.Catch.Effort.Sp(SP.List[[i]], LBData = LBData.1981.2015.Nov2017)
      tmp[,ncol(tmp)] <- tmp[,ncol(tmp)]/2.20462  # ** Converting from lbs to kg here **
      names(tmp)[ncol(tmp)] <- names(SP.List)[i]
      LB.ShortForm <- match.f(LB.ShortForm, tmp, "Key", "Key", ncol(tmp))
@@ -51,12 +51,12 @@ sum(LB.ShortForm$POPlbs/2.20462 - LB.ShortForm$POP.kg) # sum = 0, testing new me
 # Overwrite WDFW's DURATION with WDFW's ADJ_TOWTIME for WA 
 LB.ShortForm$DURATION[LB.ShortForm$AGID  %in% 'W' & !is.na(LB.ShortForm$ADJ_TOWTIME)] <- LB.ShortForm$ADJ_TOWTIME[LB.ShortForm$AGID  %in% 'W' & !is.na(LB.ShortForm$ADJ_TOWTIME)]
 
+# Tow duration limits  
 LB.ShortForm <- LB.ShortForm[
-            # tow duration    
-                (LB.ShortForm$DURATION > 0.2) &          # records with tow duration > 0.2
-                (LB.ShortForm$DURATION <= 24.0) &     # records with tow duration <= 6 hours  
-                                (!is.na(LB.ShortForm$DURATION)) 
-            , ]
+       (LB.ShortForm$DURATION > 0.2) &       # records with tow duration > 0.2
+       (LB.ShortForm$DURATION <= 24.0) &     # records with tow duration <= 24 hours  
+       (!is.na(LB.ShortForm$DURATION)) 
+       , ]
 
 
 # Specify state waters where catch was taken - areas for analsyis using ARID_PSMFC
@@ -67,15 +67,16 @@ LB.ShortForm$State.Waters[LB.ShortForm$ARID_PSMFC %in% c("1A","1B","1C")] <- "CA
 
 
 
-# Will be using GIS depth for midwater tows (see DataProcessExplore - JRW.R)
-# Tows that have both a Strategy of 'HAKE' and a GRID label of 'MDT' will be removed as hopefully 'true' hake tows (see below). Clusters of midwater tows in PacFIN are mislabeled.
+# Clusters of midwater tows in PacFIN are mislabeled. Bathymetry depth will be used for midwater tows (see DataProcessExplore - JRW.R)
+# Tows that have both a Strategy of 'HAKE' and a GRID label of 'MDT' will be removed as hopefully 'true' hake tows (see below). 
 
-# Need to improve this with more species and perhaps add a Bottom Rockfish (BRF) strategy 
 
+# Need to improve this strategy with more species and perhaps add a Bottom Rockfish (BRF) strategy 
 
 change(LB.ShortForm) # Rows = 1,018,571, Col = 49
 
-LB.ShortForm$Strategy <- 'OTHER'
+# LB.ShortForm$Strategy <- 'OTHER'
+LB.ShortForm$Strategy <- 'BRF'
 LB.ShortForm$Strategy[(ptrlbs + POPlbs > thdlbs + dovlbs + sablbs) & (ptrlbs + POPlbs > whtlbs)] <- 'NSM'
 LB.ShortForm$Strategy[(thdlbs + dovlbs + sablbs > ptrlbs + POPlbs) & (thdlbs + dovlbs + sablbs > whtlbs)] <- 'DWD' # TDS species
 # LB.ShortForm$Strategy[(whtlbs > 10 * ptrlbs) & (whtlbs > 10 * (thdlbs + dovlbs + sablbs))] <- 'HAKE'
@@ -84,7 +85,10 @@ LB.ShortForm$Strategy[(whtlbs > 10 * ptrlbs) & (whtlbs > 10 * (thdlbs + dovlbs))
 Table(LB.ShortForm$Strategy, LB.ShortForm$GRID)
 
 
-# *** May want to leave in Hake tows for Sablefish ***
+# *** May want to leave in Hake tows for Sablefish or other analysis***
+# LB.ShortForm.with.Hake.Strat <- LB.ShortForm
+# LB.ShortForm.BCC1.CLP1.RCK1 <- LB.ShortForm
+# save(LB.ShortForm.BCC1.CLP1.RCK1, file= "Funcs and Data/LB.ShortForm.BCC1.CLP1.RCK1 21 Aug 2018.dmp")  # "YTRK"
 
 N.with.Hake <- nrow(LB.ShortForm)
 LB.ShortForm.No.Hake.Strat <- LB.ShortForm[!(LB.ShortForm$Strategy %in% 'HAKE'),] # Rows = 976,494,  Cols = 50
@@ -117,18 +121,20 @@ if(F) {
    change(LB.ShortForm.No.Hake.Strat[LB.ShortForm.No.Hake.Strat$ARID_PSMFC %in% '4A', ])
    points(SET_LONG, SET_LAT, col='green')  # These 5 points appear in the ocean not in the Puget Sound (3B or perhaps 3A)
 
+   # change(LB.ShortForm.No.Hake.Strat)
+   change(LB.ShortForm)
 
-   change(LB.ShortForm.No.Hake.Strat)
-
-   agg.table(aggregate(List(LCOD.kg/1000), List(RYEAR, Strategy), sum))
-   agg.table(aggregate(List(POP.kg/1000), List(RYEAR, Strategy), sum))
-
-
-   agg.table(aggregate(List(dovlbs/2204.62), List(RYEAR, Strategy), sum))
-   agg.table(aggregate(List(ptrlbs/2204.62), List(RYEAR, Strategy), sum))
-   agg.table(aggregate(List(sablbs/2204.62), List(RYEAR, Strategy), sum))
-   agg.table(aggregate(List(thdlbs/2204.62), List(RYEAR, Strategy), sum))
-   agg.table(aggregate(List(thdlbs/2204.62), List(RYEAR, Strategy), sum))
+   agg.table(aggregate(list(LCOD.mt = LCOD.kg/1000), List(RYEAR, Strategy), sum))
+   agg.table(aggregate(list(pop.mt = POP.kg/1000), List(RYEAR, Strategy), sum))
+   agg.table(aggregate(list(BCC1.mt = BCC1.kg/1000), List(RYEAR, Strategy), sum))
+   agg.table(aggregate(list(RCK1.mt = RCK1.kg/1000), List(RYEAR, Strategy), sum))
+   agg.table(aggregate(list(CLP1.mt = CLP1.kg/1000), List(RYEAR, Strategy), sum))
+  
+   agg.table(aggregate(list(dov.kg = dovlbs/2204.62), List(RYEAR, Strategy), sum))
+   agg.table(aggregate(list(ptr.kg = ptrlbs/2204.62), List(RYEAR, Strategy), sum))
+   agg.table(aggregate(list(sab.kg = sablbs/2204.62), List(RYEAR, Strategy), sum))
+   agg.table(aggregate(list(thd.kg = thdlbs/2204.62), List(RYEAR, Strategy), sum))
+   r(agg.table(aggregate(list(sht.kg = whtlbs/2204.62), List(RYEAR, Strategy), sum)), 3)
 
    Table(LB.ShortForm$RYEAR, LB.ShortForm$AGID, LB.ShortForm$ptrlbs > 0)
    Table(LB.ShortForm$RYEAR, LB.ShortForm$AGID, LB.ShortForm$sablbs > 0)

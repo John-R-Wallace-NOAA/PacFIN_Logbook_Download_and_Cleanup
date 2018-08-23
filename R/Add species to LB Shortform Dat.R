@@ -71,12 +71,13 @@ LB.ShortForm$State.Waters[LB.ShortForm$ARID_PSMFC %in% c("1A","1B","1C")] <- "CA
 # Tows that have both a Strategy of 'HAKE' and a GRID label of 'MDT' will be removed as hopefully 'true' hake tows (see below). 
 
 
-# Need to improve this strategy with more species and perhaps add a Bottom Rockfish (BRF) strategy 
+# The OTHER strategy has been labeled BRF after looking at Canary, Darkblotched, Bocaccio, and Chilipepper (Aug 22 2018)
+# OLD: Need to improve this strategy with more species and perhaps add a Bottom Rockfish (BRF) strategy 
 
 change(LB.ShortForm) # Rows = 1,018,571, Col = 49
 
 # LB.ShortForm$Strategy <- 'OTHER'
-LB.ShortForm$Strategy <- 'BRF'
+LB.ShortForm$Strategy <- 'BRF' 
 LB.ShortForm$Strategy[(ptrlbs + POPlbs > thdlbs + dovlbs + sablbs) & (ptrlbs + POPlbs > whtlbs)] <- 'NSM'
 LB.ShortForm$Strategy[(thdlbs + dovlbs + sablbs > ptrlbs + POPlbs) & (thdlbs + dovlbs + sablbs > whtlbs)] <- 'DWD' # TDS species
 # LB.ShortForm$Strategy[(whtlbs > 10 * ptrlbs) & (whtlbs > 10 * (thdlbs + dovlbs + sablbs))] <- 'HAKE'

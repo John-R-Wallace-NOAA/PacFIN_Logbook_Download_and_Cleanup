@@ -1,4 +1,4 @@
-# PacFIN_Logbook_Download_and_Cleanup
+# PacFIN_Logbook_Download_and_Cleanup - 2018 version
 R source code to download PacFIN logbook data (https://pacfin.psmfc.org/) and filter for reasonable tows.
 (A PacFIN confidentiality agreement is required to obtain the needed login and password.)
 

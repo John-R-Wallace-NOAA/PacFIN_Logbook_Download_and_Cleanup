@@ -23,62 +23,71 @@
         # save(EEZ.Polygon.WestCoast, file="EEZ.Polygon.WestCoast.dmp")
 
         load("Funcs and Data/EEZ.Polygon.WestCoast.dmp")
-
+        # JRWToolBox::gitAFile("https://cdn.jsdelivr.net/gh/John-R-Wallace/PacFIN_Logbook_Download_and_Cleanup@master/R/Funcs and Data/EEZ.Polygon.WestCoast.dmp", type = 'RData', File = "Funcs and Data/EEZ.Polygon.WestCoast.dmp")
 
         #  Using for sample_frac (dplyr) for a fraction of the data
-        ilines(list(world.h.land, dat.eez.usa2.mat), c(-135, -116), c(29.5, 49.5), zoom=F)
         
-        xyplot(SET_LAT ~ SET_LONG | factor(RYEAR), data = sample_frac(Dat, 0.10))  # Shows if any (0, 0) lat-long in 'Dat'
+        # load("Funcs and Data/LB Shortform unfiltered Dat 25 Mar 2019.dmp")  # Load if needed
+        
+        plot(Dat$SET_LONG, Dat$SET_LAT)
+        
+        ilines(list(world.h.land, EEZ.Polygon.WestCoast), c(-135, -116), c(29.5, 49.5), zoom = FALSE)
+        points(Dat$SET_LONG, Dat$SET_LAT)
+        
+        xyplot(SET_LAT ~ SET_LONG | factor(RYEAR), data = sample_frac(Dat, 0.10))  # Shows if any (0, 0) lat/long in 'Dat'
+        dev.new()
         xyplot(SET_LAT ~ SET_LONG | factor(RYEAR), data = sample_frac(Dat, 0.10), ylim = c(29.5, 50), xlim = c(-135, -116) )
 
-        Dat$InsideEEZ <- as.logical(point.in.polygon(Dat$SET_LONG, Dat$SET_LAT, EEZ.Polygon.WestCoast[,1], EEZ.Polygon.WestCoast[,2]))  # Runs 30-60 mins.
-        save(Dat, file="Funcs and Data/LB Shortform EEZ Dat 29 Nov 2017.dmp") # Backup for long run
+        Dat$InsideEEZ <- as.logical(sp::point.in.polygon(Dat$SET_LONG, Dat$SET_LAT, EEZ.Polygon.WestCoast[,1], EEZ.Polygon.WestCoast[,2]))  # With sp::point.in.polygon run time is now only a few mins.
+        Dat$InsideEEZ[is.na(Dat$SET_LONG) | is.na(Dat$SET_LAT)] <- NA
+        # save(Dat, file="Funcs and Data/LB Shortform EEZ Dat 25 Mar 2019.dmp") # Backup for long run or stopping point
 
         Data <- Dat[Dat$InsideEEZ, ]  # inside the EEZ
         DataOut <- Dat[!Dat$InsideEEZ, ] # Outside the EEZ
         nrow(Data)
         nrow(DataOut)
         
+       
         ilines(EEZ.Polygon.WestCoast, col='red', z= F)
         points(Data$SET_LONG, Data$SET_LAT)
-
+   
         ilines(EEZ.Polygon.WestCoast, col='red', z= F)
         points(DataOut$SET_LONG, DataOut$SET_LAT)
 
+        # Data in
         xyplot(SET_LAT ~ SET_LONG | factor(RYEAR), data = sample_frac(Data, 0.10), ylim = c(29.5, 50), xlim = c(-135, -116) ) # Sample_frac() is in the 'dplyr' package
        
-        ######  Consistent reporting of land tows for ~5 years in CA after block reporting stopped in 1997. Also bad in the North in 1993-94. See also the 6 figures per page below. ######
+        ######  Data out: Consistent reporting of land tows for ~5 years in CA after block reporting stopped in 1997. Also bad in the North in 1993-94. See also the 6 figures per page below. ######
         xyplot(SET_LAT ~ SET_LONG | factor(RYEAR), data = sample_frac(DataOut, 0.10), ylim = c(29.5, 50), xlim = c(-135, -116) )  
         
-        ilines(list(world.h.land, world.h.borders, dat.eez.usa2.mat), c(-135, -116), c(29.5, 49.5), zoom = F)
+        ilines(list(world.h.land, world.h.borders, EEZ.Polygon.WestCoast), c(-135, -116), c(29.5, 49.5), zoom = F)
         points(Data[Data$RYEAR %in% 1994, c("SET_LONG", "SET_LAT")], col = 'dodgerblue', pch=".")
         points(DataOut[DataOut$RYEAR %in% 1994, c("SET_LONG", "SET_LAT")], col = 'magenta')
-        windows()
-        ilines(list(world.h.land, dat.eez.usa2.mat), c(-125, -123), c(43.5, 44.5), zoom = F)
+        dev.new() # Zoommed in 
+        ilines(list(world.h.land, EEZ.Polygon.WestCoast), c(-125, -123), c(43.5, 44.5), zoom = F)
         points(DataOut[DataOut$RYEAR %in% 1994, c("SET_LONG", "SET_LAT")], col = 'magenta')
  
-        windows()
-        ilines(list(world.h.land, world.h.borders, dat.eez.usa2.mat), c(-135, -116), c(29.5, 49.5), zoom = F)
+        dev.new() # 1997 only
+        ilines(list(world.h.land, world.h.borders, EEZ.Polygon.WestCoast), c(-135, -116), c(29.5, 49.5), zoom = F)
         points(Data[Data$RYEAR %in% 1997, c("SET_LONG", "SET_LAT")], col = 'dodgerblue', pch=".")
         points(DataOut[DataOut$RYEAR %in% 1997, c("SET_LONG", "SET_LAT")], col = 'magenta')
-        windows()
-        ilines(list(world.h.land, dat.eez.usa2.mat), c(-125, -123), c(43.5, 44.5), zoom = F)
+        dev.new()
+        ilines(list(world.h.land, EEZ.Polygon.WestCoast), c(-125, -123), c(43.5, 44.5), zoom = F)
         points(DataOut[DataOut$RYEAR %in% 1997, c("SET_LONG", "SET_LAT")], col = 'magenta')
 
-        windows()
-        ilines(list(world.h.land, world.h.borders, dat.eez.usa2.mat), c(-135, -116), c(29.5, 49.5), zoom = F)
+        dev.new() # 2015 only
+        ilines(list(world.h.land, world.h.borders, EEZ.Polygon.WestCoast), c(-135, -116), c(29.5, 49.5), zoom = F)
         points(Data[Data$RYEAR %in% 2015, c("SET_LONG", "SET_LAT")], col = 'dodgerblue', pch=".")
         points(DataOut[DataOut$RYEAR %in% 2015, c("SET_LONG", "SET_LAT")], col = 'magenta')
       
-        windows()
-        ilines(list(world.h.land, world.h.borders, dat.eez.usa2.mat), c(-135, -116), c(29.5, 49.5), zoom = F)
+        dev.new() # 2000 only
+        ilines(list(world.h.land, world.h.borders, EEZ.Polygon.WestCoast), c(-135, -116), c(29.5, 49.5), zoom = F)
         points(Data[Data$RYEAR %in% 2000, c("SET_LONG", "SET_LAT")], col = 'dodgerblue', pch=".")
         points(DataOut[DataOut$RYEAR %in% 2000, c("SET_LONG", "SET_LAT")], col = 'magenta')
 
         # The centroid of the blocks in CA could be out of the EEZ while the actual tow in that block was still in the EEZ.
-      
-        windows()
-        ilines(list(world.h.land, world.h.borders, dat.eez.usa2.mat), c(-135, -116), c(29.5, 49.5), zoom = F)
+        dev.new()
+        ilines(list(world.h.land, world.h.borders, EEZ.Polygon.WestCoast), c(-135, -116), c(29.5, 49.5), zoom = F)
         points(Data[Data$RYEAR %in% 1983, c("SET_LONG", "SET_LAT")], col = 'dodgerblue', pch=".")
         points(DataOut[DataOut$RYEAR %in% 1983, c("SET_LONG", "SET_LAT")], col = 'magenta')
       
@@ -92,12 +101,12 @@
  
 # Lat/Long inside and outside the EEZ, longitudes > -115 removed
         graphics.off()
-        windows()
-        List.6 <- list(); List.6[[1]] <- 1:6 + 1980; List.6[[2]] <- 7:12 + 1980; List.6[[3]] <- 13:18 + 1980; List.6[[4]] <- 19:24 + 1980; List.6[[5]] <- 25:30 + 1980; List.6[[6]] <- 31:35 + 1980
-        for ( j in 1:6) {
-           windows()
+        dev.new()
+        List <- list(); List[[1]] <- 1:6 + 1980; List[[2]] <- 7:12 + 1980; List[[3]] <- 13:18 + 1980; List[[4]] <- 19:24 + 1980; List[[5]] <- 25:30 + 1980; List[[6]] <- 31:36 + 1980; List[[7]] <- 37:38 + 1980
+        for ( j in 1:7) {
+           dev.new()
            par(mfrow=c(2,3))
-           for( i in List.6[[j]]) {
+           for( i in List[[j]]) {
           
              DATA <- Dat[Dat$RYEAR %in% i & Dat$InsideEEZ & Dat$SET_LONG < -115, c("SET_LONG", "SET_LAT")]
             #  DATA$SET_LONG <- jitter(DATA$SET_LONG, 1, amount = 0)  # Jittering shows data hidden by the same block centroid

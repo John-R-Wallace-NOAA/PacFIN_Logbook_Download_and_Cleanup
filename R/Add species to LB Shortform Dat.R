@@ -22,11 +22,11 @@ sort(unique(LBData.1981.2015.Nov2017$SPID))
 
 # *************************************** Good tows only *******************************************
 
-load("Funcs and Data/LB Shortform Final Dat 25 Jan 2018.dmp") # Only good tows in LB.ShortForm # rows = 1,033,637,  cols = 46
-source("Funcs and Data/PacFIN.Logbook.Catch.Effort.Sp.R") # Species or species group aggregate catch
+load("Funcs and Data/LB Shortform Final 25 Mar 2019.dmp") # Only good tows in LB.ShortForm # rows = 1,033,637,  cols = 46
+Source("Funcs and Data/PacFIN.Logbook.Catch.Effort.Sp.R") # Species or species group aggregate catch
 
 
-# ******** Add species here *****************
+# ******** Add extra species here *****************
 
 SP.List <- list(LCOD.kg = c("LCOD", "LCD1"), POP.kg = c("POP1", "POP2", "UPOP")) # ** kg label here **
 # SP.List <- list(YTRK.kg = c("YTRK", "YTR1")) # ** kg label here **
@@ -43,20 +43,29 @@ for ( i in 1:length(SP.List)) {
 LB.ShortForm[1:4,]
 
 
+# sum = 0, testing new method with match.f() with old method using POP
+# sum(LB.ShortForm$POPlbs/2.20462 - LB.ShortForm$POP.kg) 
 
-sum(LB.ShortForm$POPlbs/2.20462 - LB.ShortForm$POP.kg) # sum = 0, testing new method with match.f() with old method using POP
+# ******** Done adding species *****************
+
 
 
 
 # Overwrite WDFW's DURATION with WDFW's ADJ_TOWTIME for WA 
 LB.ShortForm$DURATION[LB.ShortForm$AGID  %in% 'W' & !is.na(LB.ShortForm$ADJ_TOWTIME)] <- LB.ShortForm$ADJ_TOWTIME[LB.ShortForm$AGID  %in% 'W' & !is.na(LB.ShortForm$ADJ_TOWTIME)]
 
-# Tow duration limits  
+# Tow duration limits 
+N.with.all.tows <- nrow(LB.ShortForm)
 LB.ShortForm <- LB.ShortForm[
        (LB.ShortForm$DURATION > 0.2) &       # records with tow duration > 0.2
        (LB.ShortForm$DURATION <= 24.0) &     # records with tow duration <= 24 hours  
        (!is.na(LB.ShortForm$DURATION)) 
        , ]
+100 * (1 - nrow(LB.ShortForm)/N.with.all.tows) # Percent of tows removed
+
+
+N.with.Hake <- nrow(LB.ShortForm)
+LB.ShortForm.No.Hake.Strat <- LB.ShortForm[!(LB.ShortForm$Strategy %in% 'HAKE'),] # Rows = 976,494,  Cols = 50
 
 
 # Specify state waters where catch was taken - areas for analsyis using ARID_PSMFC
@@ -74,7 +83,7 @@ LB.ShortForm$State.Waters[LB.ShortForm$ARID_PSMFC %in% c("1A","1B","1C")] <- "CA
 # The OTHER strategy has been labeled BRF after looking at Canary, Darkblotched, Bocaccio, and Chilipepper (Aug 22 2018)
 # OLD: Need to improve this strategy with more species and perhaps add a Bottom Rockfish (BRF) strategy 
 
-change(LB.ShortForm) # Rows = 1,018,571, Col = 49
+change(LB.ShortForm) # Rows = 1,048,814, Col = 52
 
 # LB.ShortForm$Strategy <- 'OTHER'
 LB.ShortForm$Strategy <- 'BRF' 
@@ -87,7 +96,9 @@ Table(LB.ShortForm$Strategy, LB.ShortForm$GRID)
 
 
 # *** May want to leave in Hake tows for Sablefish or other analysis***
-# LB.ShortForm.with.Hake.Strat <- LB.ShortForm
+LB.ShortForm.with.Hake.Strat <- LB.ShortForm
+save(LB.ShortForm.with.Hake.Strat, file= "Funcs and Data/LB.ShortForm.with.Hake.Strat 25 Mar 2019.dmp")
+
 # LB.ShortForm.BCC1.CLP1.RCK1 <- LB.ShortForm
 # save(LB.ShortForm.BCC1.CLP1.RCK1, file= "Funcs and Data/LB.ShortForm.BCC1.CLP1.RCK1 21 Aug 2018.dmp")  # "YTRK"
 
@@ -105,9 +116,15 @@ Table(LB.ShortForm.No.Hake.Strat$Strategy, LB.ShortForm.No.Hake.Strat$GRID)
 # DatG$PC[DatG$CPUE_petrale > quantile(DatG$CPUE_petrale, 0.50) & DatG$CPUE_dover <= quantile(DatG$CPUE_dover, 0.75) & 
 #               DatG$CPUE_thorny <= quantile(DatG$CPUE_thorny, 0.75) & DatG$CPUE_sablefish <= quantile(DatG$CPUE_sablefish, 0.75)] <- "PC1"
 
-# Species picked above
-save(LB.ShortForm.No.Hake.Strat, file= "Funcs and Data/LB ShortForm No Hake Strat 26 Jan 2018.dmp")  # LCOD & POP
+
+# Save without added species
+save(LB.ShortForm.No.Hake.Strat, file= "Funcs and Data/LB ShortForm No Hake Strat 25 Mar 2019.dmp")
+
+# Species added above
+# save(LB.ShortForm.No.Hake.Strat, file= "Funcs and Data/LB ShortForm No Hake Strat 26 Jan 2018.dmp")  # LCOD & POP
 # save(LB.ShortForm.No.Hake.Strat, file= "Funcs and Data/LB.ShortForm.No.Hake.Strat 22 Mar 2017.dmp")  # "YTRK"
+
+
 
 # Check Data
 

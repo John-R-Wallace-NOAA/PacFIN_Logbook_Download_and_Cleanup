@@ -1,10 +1,10 @@
 
 # ==============================  GIS depth with depthMeters() =====================================================
 
-# For all tows, add GIS depth with depthMeters() function which is now part of the Imap package 
+# For all tows, add GIS depth with depthMeters() function which is now part of the Imap package (https://github.com/John-R-Wallace/Imap)
 
 # After first round most unique lat/longs pairs have GIS depths, so only the new lat/long pairs may need to be added (see below)
-if(T) {
+if(TRUE) {
 
      Dat$LL.Key <- paste(Dat$SET_LONG, Dat$SET_LAT)
      LL.unique <- Dat[!duplicated(Dat$LL.Key), c("SET_LONG", "SET_LAT", "LL.Key")]
@@ -104,33 +104,53 @@ if(T) {
      save(LL.unique.All, file = "Funcs and Data/LL.unique.All 05 Dec 2017.dmp")  # All unique lat/longs in and outside of the EEZ 1981-2015
     
 } else {
-     # Not sure if PacFIN Lat/Long tow locations with GIS depths, but no other meta-data would be allowed on GitHub - so no unique lat/longs pairs on GitHub for now
-     download.file("https://cdn.rawgit.com/John-R-Wallace/PacFIN_Logbook_Download_and_Cleanup/master/R/Funcs and Data/Points.out.of.Dat.and.polygons.dmp", "Funcs and Data/LL.unique.All 05 Dec 2017.dmp", mode = 'wb')
+     # Not sure if PacFIN Lat/Long tow locations with GIS depths are allowed on GitHub - so no unique lat/longs pairs on GitHub for now (hence the if statement is set to TRUE above)
+     load('Funcs and Data/LL.unique.All 05 Dec 2017.dmp')
+     # JRWToolBox::gitAFile("https://cdn.jsdelivr.net/gh/John-R-Wallace/PacFIN_Logbook_Download_and_Cleanup@master/R/Funcs and Data/Points.out.of.Dat.and.polygons.dmp", type = 'RData', File = "Funcs and Data/LL.unique.All 05 Dec 2017.dmp")
 }
 
 # Match lat/long pair key to add DepthGIS.m (m = meters) to Dat from the saved unique lat/longs pairs.
-load('Funcs and Data/LL.unique.All 05 Dec 2017.dmp')
 Dat$LL.Key <- paste(Dat$Best_Long, Dat$Best_Lat)
 Dat <- match.f(Dat, LL.unique.All, "LL.Key", "LL.Key", "DepthGIS.m")  
 
-sum(is.na(Dat$DepthGIS.m)) # 46,222  (OLD = 68,173)
+sum(is.na(Dat$DepthGIS.m)) # 72,409(Old = 46,222, Older = 68,173)
 Table(Dat$RYEAR, is.finite(Dat$DepthGIS.m))
 
 
 #  Find any new GIS depths (this may or may not be needed depending on the age of saved unique lat/longs pairs)
 
+# ***** Early save *******
+save(Dat, file = "Funcs and Data/LB GIS Depths Dat 25 Mar 2019.dmp") # *** This 'Dat' has Month, DepthGIS.m, GRID and AGID as factors. Bimo is recalculated and LL.Key is removed.
+
+
 TF <- (!is.na(Dat$SET_LAT) & Dat$SET_LAT!= 0 & !is.na(Dat$SET_LONG) &  Dat$SET_LONG!= 0 & is.na(Dat$DepthGIS.m))
-sum(TF) # 3
+sum(TF) # 26,190
 Missing.LL <- Dat[TF, c("SET_LONG", "SET_LAT")]
 Missing.LL$LL.Key <- paste(Missing.LL$SET_LONG, Missing.LL$SET_LAT)
 Missing.LL.Uniq <- Missing.LL[!duplicated(Missing.LL$LL.Key),]
-nrow(Missing.LL.Uniq) # 3
+nrow(Missing.LL.Uniq) # 25,505
+system.time(depthMeters(Missing.LL.Uniq[1:100, c("SET_LONG", "SET_LAT")])) # Check how long finding the depths will take
 Missing.LL.Uniq$DepthGIS.m <- depthMeters(Missing.LL.Uniq[, c("SET_LONG", "SET_LAT")])
 Missing.LL <- match.f(Missing.LL, Missing.LL.Uniq, "LL.Key", "LL.Key", "DepthGIS.m")
 Dat$DepthGIS.m[TF] <- Missing.LL$DepthGIS.m
-sum(!is.na(Dat$SET_LAT) & Dat$SET_LAT!= 0 & !is.na(Dat$SET_LONG) &  Dat$SET_LONG!= 0 & is.na(Dat$DepthGIS.m)) 
-# 1 tow left which is far outside the polygons 
-Dat[!is.na(Dat$SET_LAT) & Dat$SET_LAT!= 0 & !is.na(Dat$SET_LONG) &  Dat$SET_LONG!= 0 & is.na(Dat$DepthGIS.m),]  
+sum(!is.na(Dat$SET_LAT) & Dat$SET_LAT != 0 & !is.na(Dat$SET_LONG) &  Dat$SET_LONG != 0 & is.na(Dat$DepthGIS.m)) 
+
+# 9 tows left - last 2 can use the depth from the 'UP' lat/long 
+Dat[!is.na(Dat$SET_LAT) & Dat$SET_LAT != 0 & !is.na(Dat$SET_LONG) &  Dat$SET_LONG != 0 & is.na(Dat$DepthGIS.m),] 
+
+Dat$DepthGIS.m[Dat$Key %in% 'O 1122102 4'] <- depthMeters(Dat[Dat$Key %in% 'O 1122102 4', c('UP_LONG', 'UP_LAT')])
+Dat$DepthGIS.m[Dat$Key %in% 'W 1123289 1'] <- depthMeters(Dat[Dat$Key %in% 'W 1123289 1', c('UP_LONG', 'UP_LAT')])
+
+# For one trip with 6 tows in 2016 the locations are in Astoria port
+dev.new()
+ilines(list(world.h.land, world.h.borders, EEZ.Polygon.WestCoast), c(-135, -116), c(29.5, 49.5), zoom = TRUE)
+points(Dat[!is.na(Dat$SET_LAT) & Dat$SET_LAT != 0 & !is.na(Dat$SET_LONG) &  Dat$SET_LONG != 0 & is.na(Dat$DepthGIS.m),c('SET_LONG' , 'SET_LAT')], col='red')
+points(Dat[!is.na(Dat$SET_LAT) & Dat$SET_LAT != 0 & !is.na(Dat$SET_LONG) &  Dat$SET_LONG != 0 & is.na(Dat$DepthGIS.m),c('UP_LONG' , 'UP_LAT')], col='BLUE')
+
+
+# Add the latest Missing.LL to LL.unique
+LL.unique.All <- rbind(LL.unique.All, Missing.LL.Uniq)
+save(LL.unique.All, file = 'Funcs and Data/LL.unique.All 25 Mar 2019.dmp')
 
 
 # For the Dat file, need to redo bimo (bimonthly), add Month as a factor, and change GRID and AGID to factors
@@ -143,6 +163,6 @@ Dat$LL.Key <- NULL
 Dat$SET_LAT[Dat$SET_LAT == 0] <- NA
 Dat$SET_LONG[Dat$SET_LONG == 0] <- NA
 
-save(Dat, file = "Funcs and Data/LB GIS Depths Dat 5 Dec 2017.dmp") # *** This 'Dat' has Month, DepthGIS.m, GRID and AGID as factors. Bimo is recalculated and LL.Key is removed.
+save(Dat, file = "Funcs and Data/LB GIS Depths Dat 25 Mar 2019.dmp") # *** This 'Dat' has Month, DepthGIS.m, GRID and AGID as factors. Bimo is recalculated and LL.Key is removed.
 
 

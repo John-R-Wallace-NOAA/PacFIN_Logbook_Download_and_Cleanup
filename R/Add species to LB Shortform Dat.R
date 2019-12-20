@@ -3,7 +3,7 @@
 
 # Add species to the 'LB.ShortForm' file, each row of 'LB.ShortForm' will be a unique tow and the species catch (kg) will be in added columns
 
-base::load("Funcs and Data/LBData.1981.2015.Nov2017.dmp")  # Load main raw data, if not already loaded, used inside of PacFIN.Logbook.Catch.Effort.Sp() below
+base::load("Funcs and Data/LBData.1981.2018.dmp")  # Load main raw data, if not already loaded, used inside of PacFIN.Logbook.Catch.Effort.Sp() below
 
 sort(unique(LBData.1981.2018$SPID))
 #   [1] "ALBC" "ARR1" "ART1" "ARTH" "ASRK" "BCC1" "BGL1" "BLK1" "BLU1" "BMO1" "BNK1" "BRW1" "BRZ1" "BSKT" "BSOL" "BSRK" "BSRM" "BTCR" "BTRY" "BYL1"

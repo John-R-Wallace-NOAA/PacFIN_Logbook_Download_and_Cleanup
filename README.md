@@ -5,3 +5,5 @@ R source code to download PacFIN logbook data (https://pacfin.psmfc.org/) and fi
 Start with:  ## Main PacFIN Logbook Download & Cleanup  ##.R
 
 To retain blank lines and comments in the source code files, please copy and paste out of GitHub using the 'Raw' mode.
+
+Start with '## Main PacFIN Logbook Download & Cleanup ##.R' in the R folder.

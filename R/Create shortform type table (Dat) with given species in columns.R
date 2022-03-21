@@ -10,7 +10,7 @@
 
              "USKT" "BSKT" "OSKT" "CSKT" "LSKT"
     # Species added, including nominal groups
-    MH.List <- list(ptrlbs = c("PTR1", "PTRL"), dovlbs = c("DOVR", "DVR1"), thdlbs = c("LSP1", "SSP1"), sablbs = c("SABL", "SBL1"), whtlbs = "PWHT", 
+    MH.List <- list(ptrlbs = c("PTR1", "PTRL"), dovlbs = c("DOVR", "DVR1"), thdlbs = c("LSP1", "SSP1"), sablbs = "SABL", whtlbs = "PWHT", 
                     POPlbs = c("POP1", "POP2", "UPOP"), USKTlbs = "USKT", OSKTlbs = "OSKT", BSKTlbs = "BSKT", LSKTlbs = "LSKT") 
     
     # Not added yet ;

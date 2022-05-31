@@ -59,79 +59,68 @@ if(FALSE) {
       
       
       PointsOut.Bank <- rbind(PointsOut[-8,], PointsOut2, Bank)
-      save(PointsOut.Bank, CoastWidePolygon, BankPolygon, file = 'Funcs and Data/Points.out.of.Dat.and.polygons.dmp')
+      save(PointsOut.Bank, CoastWidePolygon, BankPolygon, file = 'Funcs and Data/Points.out.of.Dat.and.polygons.RData')
 
 } else {
-       load('EEZ.Polygon.WestCoast.dmp')
-       load('Funcs and Data/EEZ.Polygon.WestCoast.dmp')
-       load('Points.out.of.Dat.and.polygons.dmp')
+
+       load('Funcs and Data/EEZ.Polygon.WestCoast.RData')
+       load('Funcs and Data/Points.out.of.Dat.and.polygons.Rdata')
               
       # Or load EEZ.Polygon.WestCoast, CoastWidePolygon, and BankPolygon from GitHub
-      # download.file("https://cdn.jsdelivr.net/gh/John-R-Wallace/PacFIN_Logbook_Download_and_Cleanup@master/R/Funcs and Data/EEZ.Polygon.WestCoast.dmp", "Funcs and Data/EEZ.Polygon.WestCoast.dmp", mode = 'wb')
-      # JRWToolBox::gitAFile("https://cdn.jsdelivr.net/gh/John-R-Wallace/PacFIN_Logbook_Download_and_Cleanup@master/R/Funcs and Data/EEZ.Polygon.WestCoast.dmp", type = 'RData', File = "Funcs and Data/EEZ.Polygon.WestCoast.dmp")
-      # JRWToolBox::gitAFile("https://cdn.jsdelivr.net/gh/John-R-Wallace/PacFIN_Logbook_Download_and_Cleanup@master/R/Funcs and Data/Points.out.of.Dat.and.polygons.dmp", type = 'RData', File = "Funcs and Data/Points.out.of.Dat.and.polygons.dmp")
+      # download.file("https://cdn.jsdelivr.net/gh/John-R-Wallace/PacFIN_Logbook_Download_and_Cleanup@master/R/Funcs and Data/EEZ.Polygon.WestCoast.RData", "Funcs and Data/EEZ.Polygon.WestCoast.RData", mode = 'wb')
+      # rgit::gitAFile("https://cdn.jsdelivr.net/gh/John-R-Wallace/PacFIN_Logbook_Download_and_Cleanup@master/R/Funcs and Data/EEZ.Polygon.WestCoast.RData", type = 'RData', File = "Funcs and Data/EEZ.Polygon.WestCoast.RData")
+      # rgit::gitAFile("https://cdn.jsdelivr.net/gh/John-R-Wallace/PacFIN_Logbook_Download_and_Cleanup@master/R/Funcs and Data/Points.out.of.Dat.and.polygons.RData", type = 'RData', File = "Funcs and Data/Points.out.of.Dat.and.polygons.RData")
      
 }
 
 
-# Load the previously defined polygons from 2015
-load("Funcs and Data/Points.out.of.Dat.and.polygons.dmp")
+# Load the previously defined polygons from 2015 - if needed
+# load("Funcs and Data/Points.out.of.Dat.and.polygons.RData")
 
 # Create 'InsidePoly', 'InsideBankPoly' and 'InsideAllPoly' logical columns, TRUE is inside the polygon, FALSE is outside
-# NOTE: !!!! point.in.polygon() (sp package) needs to return NA when latitude and/or longitude are NA, not 0 (logical FALSE)!!!!
-Dat$InsidePoly <- as.logical(point.in.polygon(Dat$SET_LONG, Dat$SET_LAT, CoastWidePolygon[,1], CoastWidePolygon[,2]))  
+# NOTE: !!!! sp::point.in.polygon() needs to return NA when latitude and/or longitude are NA, not 0 (logical FALSE)!!!!
+Dat$InsidePoly <- as.logical(sp::point.in.polygon(Dat$SET_LONG, Dat$SET_LAT, CoastWidePolygon[,1], CoastWidePolygon[,2]))  
 Dat$InsidePoly[is.na(Dat$SET_LONG) | is.na(Dat$SET_LAT)] <- NA
-Dat$InsideBankPoly <- as.logical(point.in.polygon(Dat$SET_LONG, Dat$SET_LAT, BankPolygon[,1], BankPolygon[,2])) 
+Dat$InsideBankPoly <- as.logical(sp::point.in.polygon(Dat$SET_LONG, Dat$SET_LAT, BankPolygon[,1], BankPolygon[,2])) 
 Dat$InsideBankPoly[is.na(Dat$SET_LONG) | is.na(Dat$SET_LAT)] <- NA
 Dat$InsideAllPoly <- Dat$InsidePoly | Dat$InsideBankPoly
 
 # Save the Dat with polygon columns
-save(Dat, file="Funcs and Data/LB Polygons Dat 25 Mar 2019.dmp")
+save(Dat, file="Funcs and Data/LB Polygons Dat 12 Apr 2021.RData")
 
 
 # Create figures showing the tows inside and outside the polygons. The figures are created both on the screen and saved to PNG files in Figs/PolygonInOut/
-
-# Windows
-dev.new()
-ilines(list(EEZ.Polygon.WestCoast, CoastWidePolygon, BankPolygon), z= F)
-points(Dat[Dat$InsideAllPoly, 'SET_LONG'], Dat[Dat$InsideAllPoly, 'SET_LAT'], col='green', pch='.', cex=2)
-points(Dat[!Dat$InsideAllPoly, 'SET_LONG'], Dat[!Dat$InsideAllPoly, 'SET_LAT'], col='red', pch='.', cex=2)
-
-# PNG output  [ dev.copy() gives poor results - so repeating the code ] 
 dir.create("Figs/PolygonInOut/", recursive = TRUE)
-png("Figs/PolygonInOut/PolygonInOut_All_Years.png", 960, 960)
-png("Figs/PolygonInOut/PolygonInOut_All_Years.png", 3000, 3000)
-ilines(list(EEZ.Polygon.WestCoast, CoastWidePolygon, BankPolygon), z= F)
-points(Dat[Dat$InsideAllPoly, 'SET_LONG'], Dat[Dat$InsideAllPoly, 'SET_LAT'], col='green', pch='.', cex=2)
-points(Dat[!Dat$InsideAllPoly, 'SET_LONG'], Dat[!Dat$InsideAllPoly, 'SET_LAT'], col='red', pch='.', cex=2)
-graphics.off() 
+
+for(PNG in c(FALSE, TRUE)) { 
+ 
+   if(PNG)
+      png("Figs/PolygonInOut/PolygonInOut_All_Years.png", 3000, 3000)
+   ilines(list(EEZ.Polygon.WestCoast, CoastWidePolygon, BankPolygon), z= F)
+   points(Dat[Dat$InsideAllPoly, 'SET_LONG'], Dat[Dat$InsideAllPoly, 'SET_LAT'], col='green', pch='.', cex=2)
+   points(Dat[!Dat$InsideAllPoly, 'SET_LONG'], Dat[!Dat$InsideAllPoly, 'SET_LAT'], col='red', pch='.', cex=2)
+   if(PNG)
+     dev.off() 
+}   
 
 
-
-# Windows - Lat/Long inside and outside the polygons (coast and bank polygons) by year
-        graphics.off()
-        List <- list(); List[[1]] <- 1:6 + 1980; List[[2]] <- 7:12 + 1980; List[[3]] <- 13:18 + 1980; List[[4]] <- 19:24 + 1980; List[[5]] <- 25:30 + 1980; List[[6]] <- 31:36 + 1980; List[[7]] <- 37:38 + 1980
-        for ( j in 1:7) {
-           dev.new()
-           par(mfrow=c(2,3))
-           for( i in List[[j]]) {
-             plot(Dat[Dat$RYEAR %in% i & Dat$InsideAllPoly, c("SET_LONG", "SET_LAT")], col = 'dodgerblue', pch=".", main = i, xlim = c(-135, -116.3) , ylim = c(32.3, 49.4))
-             points(Dat[Dat$RYEAR %in% i & !Dat$InsideAllPoly, c("SET_LONG", "SET_LAT")], col = 'magenta')
+# Lat/Long inside and outside the polygons (coast and bank polygons)
+           
+        for(PNG in c(FALSE, TRUE)) { 
+ 
+           if(PNG)   
+              png("Figs/PolygonInOut/PolygonInOut%03d.png", 960, 960)
+           List <- list(); List[[1]] <- 1:6 + 1980; List[[2]] <- 7:12 + 1980; List[[3]] <- 13:18 + 1980; List[[4]] <- 19:24 + 1980; List[[5]] <- 25:30 + 1980; List[[6]] <- 31:36 + 1980; List[[7]] <- 37:38 + 1980
+           for ( j in 1:7) {
+              par(mfrow=c(2,3))
+              for( i in List[[j]]) {
+                plot(Dat[Dat$RYEAR %in% i & Dat$InsideAllPoly, c("SET_LONG", "SET_LAT")], col = 'dodgerblue', pch=20, cex=0.2, main = i, xlim = c(-135, -116.3) , ylim = c(32.3, 49.4))
+                points(Dat[Dat$RYEAR %in% i & !Dat$InsideAllPoly, c("SET_LONG", "SET_LAT")], col = 'magenta')
+              }
            }
-         }
-
-# PNG - Lat/Long inside and outside the polygons (coast and bank polygons)
-        graphics.off() 
-        png("Figs/PolygonInOut/PolygonInOut%03d.png", 960, 960)
-        List <- list(); List[[1]] <- 1:6 + 1980; List[[2]] <- 7:12 + 1980; List[[3]] <- 13:18 + 1980; List[[4]] <- 19:24 + 1980; List[[5]] <- 25:30 + 1980; List[[6]] <- 31:36 + 1980; List[[7]] <- 37:38 + 1980
-        for ( j in 1:7) {
-           par(mfrow=c(2,3))
-           for( i in List[[j]]) {
-             plot(Dat[Dat$RYEAR %in% i & Dat$InsideAllPoly, c("SET_LONG", "SET_LAT")], col = 'dodgerblue', pch=20, cex=0.2, main = i, xlim = c(-135, -116.3) , ylim = c(32.3, 49.4))
-             points(Dat[Dat$RYEAR %in% i & !Dat$InsideAllPoly, c("SET_LONG", "SET_LAT")], col = 'magenta')
-           }
-         }
-graphics.off() 
+           if(PNG) 
+              dev.off() 
+       }      
 
 
 

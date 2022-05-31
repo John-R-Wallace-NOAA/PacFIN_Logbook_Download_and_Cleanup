@@ -34,9 +34,9 @@
         ilines(list(world.h.land, EEZ.Polygon.WestCoast), c(-135, -116), c(29.5, 49.5), zoom = FALSE)
         points(Dat$SET_LONG, Dat$SET_LAT)
         
-        xyplot(SET_LAT ~ SET_LONG | factor(RYEAR), data = sample_frac(Dat, 0.10))  # Shows if any (0, 0) lat/long in 'Dat'
+        xyplot(SET_LAT ~ SET_LONG | factor(RYEAR), data = dplyr::sample_frac(Dat, 0.10))  # Shows if any (0, 0) lat/long in 'Dat'
         dev.new()
-        xyplot(SET_LAT ~ SET_LONG | factor(RYEAR), data = sample_frac(Dat, 0.10), ylim = c(29.5, 50), xlim = c(-135, -116) )
+        xyplot(SET_LAT ~ SET_LONG | factor(RYEAR), data = dplyr::sample_frac(Dat, 0.10), ylim = c(29.5, 50), xlim = c(-135, -116) )
 
         Dat$InsideEEZ <- as.logical(sp::point.in.polygon(Dat$SET_LONG, Dat$SET_LAT, EEZ.Polygon.WestCoast[,1], EEZ.Polygon.WestCoast[,2]))  # With sp::point.in.polygon run time is now only a few mins.
         Dat$InsideEEZ[is.na(Dat$SET_LONG) | is.na(Dat$SET_LAT)] <- NA
@@ -47,18 +47,17 @@
         nrow(Data)
         nrow(DataOut)
         
-       
-        ilines(EEZ.Polygon.WestCoast, col='red', z= F)
-        points(Data$SET_LONG, Data$SET_LAT)
+        ilines(EEZ.Polygon.WestCoast, zoom = FALSE)
+        points(Data$SET_LONG, Data$SET_LAT, col = 'green', pch = '.')
+        points(DataOut$SET_LONG, DataOut$SET_LAT, col = 'red', pch = '.') 
    
-        ilines(EEZ.Polygon.WestCoast, col='red', z= F)
-        points(DataOut$SET_LONG, DataOut$SET_LAT)
-
-        # Data in
-        xyplot(SET_LAT ~ SET_LONG | factor(RYEAR), data = sample_frac(Data, 0.10), ylim = c(29.5, 50), xlim = c(-135, -116) ) # Sample_frac() is in the 'dplyr' package
-       
-        ######  Data out: Consistent reporting of land tows for ~5 years in CA after block reporting stopped in 1997. Also bad in the North in 1993-94. See also the 6 figures per page below. ######
-        xyplot(SET_LAT ~ SET_LONG | factor(RYEAR), data = sample_frac(DataOut, 0.10), ylim = c(29.5, 50), xlim = c(-135, -116) )  
+        dev.new()
+        plot(DataOut$SET_LONG, DataOut$SET_LAT, col = 'red', pch = '.') # View the extreme outliers
+   
+        # Data in (Dodger blue) and out (magenta) of the EEZ (50% of the data - randomly selected)
+        dev.new()
+        xyplot(SET_LAT ~ SET_LONG | factor(RYEAR), groups = InsideEEZ, data = dplyr::sample_frac(Dat, 0.50), pch = '.', col = c('magenta', 'dodgerblue'), ylim = c(29.5, 50), xlim = c(-135, -116) ) 
+        
         
         ilines(list(world.h.land, world.h.borders, EEZ.Polygon.WestCoast), c(-135, -116), c(29.5, 49.5), zoom = F)
         points(Data[Data$RYEAR %in% 1994, c("SET_LONG", "SET_LAT")], col = 'dodgerblue', pch=".")
@@ -99,10 +98,10 @@
         # Before 2002, it may be best to only assume the latitude is correct and include all tows,
 
  
-# Lat/Long inside and outside the EEZ, longitudes > -115 removed
+        # Lat/Long inside and outside the EEZ, longitudes > -115 removed
         graphics.off()
         dev.new()
-        List <- list(); List[[1]] <- 1:6 + 1980; List[[2]] <- 7:12 + 1980; List[[3]] <- 13:18 + 1980; List[[4]] <- 19:24 + 1980; List[[5]] <- 25:30 + 1980; List[[6]] <- 31:36 + 1980; List[[7]] <- 37:38 + 1980
+        List <- list(); List[[1]] <- 1:6 + 1980; List[[2]] <- 7:12 + 1980; List[[3]] <- 13:18 + 1980; List[[4]] <- 19:24 + 1980; List[[5]] <- 25:30 + 1980; List[[6]] <- 31:36 + 1980; List[[7]] <- 37:40 + 1980
         for ( j in 1:7) {
            dev.new()
            par(mfrow=c(2,3))

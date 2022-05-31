@@ -6,25 +6,26 @@
         
     # Species or species group aggregate catch function
     source("Funcs and Data/PacFIN.Logbook.Catch.Effort.Sp.R") 
-    #  base::load("Funcs and Data/LBData.1981.2018.dmp")  # Load if needed
+    
+    #  base::load("Funcs and Data/LBData.1981.2020.RData")  # Load if needed
 
              "USKT" "BSKT" "OSKT" "CSKT" "LSKT"
     # Species added, including nominal groups
-    MH.List <- list(ptrlbs = c("PTR1", "PTRL"), dovlbs = c("DOVR", "DVR1"), thdlbs = c("LSP1", "SSP1"), sablbs = "SABL", whtlbs = "PWHT", 
-                    POPlbs = c("POP1", "POP2", "UPOP"), USKTlbs = "USKT", OSKTlbs = "OSKT", BSKTlbs = "BSKT", LSKTlbs = "LSKT") 
+    MH.List <- list(ptrlbs = c("PTRL", "PTR1"), dovlbs = c("DOVR", "DVR1"), thdlbs = c("LSP1", "SSP1"), sablbs = "SABL", whtlbs = "PWHT", 
+                    POPlbs = c("POP1", "POP2", "UPOP"), USKTlbs = "USKT", OSKTlbs = "OSKT", BSKTlbs = "BSKT", LSKTlbs = "LSKT", lcodlbs = c("LCOD", "LCD1")) 
     
     # Not added yet ;
       #"fltlbs"    flatfish lbs
       #"rcklbs"    rockfish lbs
 
     # Create 'Dat' shortform
-    Dat <- PacFIN.Logbook.Catch.Effort.Sp(MH.List[[1]], LBData = LBData.1981.2018)
+    Dat <- PacFIN.Logbook.Catch.Effort.Sp(MH.List[[1]], LBData = LBData.1981.2020)
     cat("\n", names(MH.List)[1], "\n")
     names(Dat)[ncol(Dat)] <- names(MH.List)[1]
 
     for ( i in 2:length(MH.List)) {
         cat("\n", names(MH.List)[i], "\n")
-        tmp <- PacFIN.Logbook.Catch.Effort.Sp(MH.List[[i]], LBData = LBData.1981.2018)
+        tmp <- PacFIN.Logbook.Catch.Effort.Sp(MH.List[[i]], LBData = LBData.1981.2020)
         names(tmp)[ncol(tmp)] <- names(MH.List)[i]
         Dat <- cbind(Dat, tmp[,ncol(tmp), drop=F])
     }
@@ -51,18 +52,19 @@
 
      # Number of blocks by year and percent missing
         Table(Dat$RYEAR, is.finite(Dat$BLOCK))
-        100*sum(is.na(Dat$BLOCK))/length(Dat$BLOCK) # Percent of missing blocks is 53.7%  (54.51% - 2015)
+        100*sum(is.na(Dat$BLOCK))/length(Dat$BLOCK) # Percent of missing blocks is 54.1% (53.7% - 2018b; 54.51% - 2015)
 
      # Some catch histograms
-        dev.new(); par(mfrow=c(2,2))
+        dev.new(); par(mfrow=c(3,2))
         hist(Dat$ptrlbs, xlim=c(0,1000), breaks=c(seq(0,999,by=10), 1000, max(Dat$ptrlbs, na.rm=T)))
         hist(Dat$dovlbs, xlim=c(0,1000), breaks=c(seq(0,999,by=10), 1000, max(Dat$dovlbs)))
         hist(Dat$thdlbs, xlim=c(0,1000), breaks=c(seq(0,999,by=10), 1000, max(Dat$thdlbs)))
         hist(Dat$sablbs, xlim=c(0,1000), breaks=c(seq(0,999,by=10), 1000, max(Dat$sablbs)))
+        hist(Dat$lcodlbs, xlim=c(0,1000), breaks=c(seq(0,999,by=10), 1000, max(Dat$sablbs)))
         ## Species dover and sablefish have a really wide tail in their distribution 
 
     # save 'Dat'
-        save(Dat, file="Funcs and Data/LB Shortform unfiltered Dat 25 Mar 2019.dmp")
+        save(Dat, file="Funcs and Data/LB Shortform unfiltered Dat 12 Apr 2021.RData")
 
 
    

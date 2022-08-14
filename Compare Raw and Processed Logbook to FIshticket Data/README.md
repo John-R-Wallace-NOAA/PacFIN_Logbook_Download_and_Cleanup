@@ -18,7 +18,6 @@ Using the PacFIN.Catch.Extraction() function from the <John-R-Wallace-NOAA/PacFI
     # --- Use State.Lat in the Processed Logbook data ---
     
     # -- Sablefish --
-    
     # Fishticket data for the given species
     PacFIN.SABL.Catch.List.12.Aug.2022 <- PacFIN.Catch.Extraction("('SABL')")
     

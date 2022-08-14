@@ -7,10 +7,10 @@ Compare.Raw.LogB.to.Proc.Data.and.FT <- function(SPID, State, CompFT, LB_Raw, LB
    # **** As mentioned in PacFIN.Catch.Extraction()), the summary catch (sc) PacFIN has this strangeness of retaining the name PACFIN_PORT_CODE when it only contains WA, OR, and CA port groups. **** 
    # **** The PacFIN.PSMFC.Summary.Catch continues this legacy coding choice. ****
       
-   # ------------------------------------------- PSMFC Summary Catch Table without both research (R) and tribal data (TI) ---------------------------------------------------------------- 
+   # ------------------------------------------- PSMFC Summary Catch Table without research (R) nor tribal data (TI) ---------------------------------------------------------------- 
    CompFT.PSMFC <- CompFT[!CompFT$REMOVAL_TYPE_CODE %in% "R" & !CompFT$FLEET_CODE %in% "TI" & 
             CompFT$PACFIN_CATCH_AREA_CODE %in% c("UP","1A", "1B", "MNTREY BAY", "1E", "1C", "2A", "2B", "2C", "2E", "2F", "2D", "3A", "3B", "3C-S"), ]
-   CompFT.PSMFC$PACFIN_PORT_CODE <- CompFT.PSMFC$W_O_C_Port_Groups
+   CompFT.PSMFC$PACFIN_PORT_CODE <- CompFT.PSMFC$W_O_C_Port_Groups  # W_O_C_Port_Groups is derived from CompFT$AGENCY_CODE within PacFIN.Catch.Extraction()
    PacFIN.PSMFC.Summary.Catch <- aggregate(list(ROUND_WEIGHT_MTONS = CompFT.PSMFC$ROUND_WEIGHT_MTONS), CompFT.PSMFC[, c('COUNCIL_CODE', 'DAHL_GROUNDFISH_CODE', 'LANDING_YEAR', 'LANDING_MONTH',
                                                          'PACFIN_SPECIES_CODE', 'PACFIN_CATCH_AREA_CODE', 'PACFIN_GEAR_CODE', 'PACFIN_GROUP_GEAR_CODE', 'PACFIN_PORT_CODE')], sum, na.rm = TRUE)
    PacFIN.PSMFC.Summary.Catch <- sort.f(PacFIN.PSMFC.Summary.Catch, c('LANDING_YEAR', 'LANDING_MONTH', 'PACFIN_CATCH_AREA_CODE', 'PACFIN_GEAR_CODE', 'PACFIN_PORT_CODE'))

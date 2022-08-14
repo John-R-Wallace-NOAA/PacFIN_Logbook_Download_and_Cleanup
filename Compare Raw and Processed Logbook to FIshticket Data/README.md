@@ -3,34 +3,61 @@ Using the PacFIN.Catch.Extraction() function from the <John-R-Wallace-NOAA/PacFI
     PacFIN.Login <- UID <- "wallacej"
     PacFIN.PW <- PWD <- "*********"
     
-    # --- Sablefish ---
+     # Raw Logbook
+    base::load("LBData.1981.2021.RData")
+    
+    # Processed Logbook
+    base::load("LB.ShortForm.with.Hake.Strat.Ves.num.Mackerel 26 May 2022.RData")
+    LB.ShortForm.with.Hake.Strat.Ves.num.Mackerel$AGID <- as.character(LB.ShortForm.with.Hake.Strat.Ves.num.Mackerel$AGID)
+    
+    LB.ShortForm.with.Hake.Strat.Ves.num.Mackerel$State.Lat <- 'W'
+    LB.ShortForm.with.Hake.Strat.Ves.num.Mackerel$State.Lat[LB.ShortForm.with.Hake.Strat.Ves.num.Mackerel$SET_LAT < 46 + 16/60] <- 'O'
+    LB.ShortForm.with.Hake.Strat.Ves.num.Mackerel$State.Lat[LB.ShortForm.with.Hake.Strat.Ves.num.Mackerel$SET_LAT < 42] <- 'C'
+    Table(LB.ShortForm.with.Hake.Strat.Ves.num.Mackerel$State.Lat, LB.ShortForm.with.Hake.Strat.Ves.num.Mackerel$AGID)
+    
+    # -- Sablefish --
+    
+    # Fishticket data for the given species
     PacFIN.SABL.Catch.List.12.Aug.2022 <- PacFIN.Catch.Extraction("('SABL')")
-    load("LBData.1981.2021.RData")
-    load("LB.ShortForm.with.Hake.Strat.Ves.num.Mackerel 26 May 2022.RData")
     
-    Compare.Raw.LogB.to.Proc.Data.and.FT('SABL', c('W', 'O', 'C'), PacFIN.SABL.Catch.List.12.Aug.2022$PacFIN.PSMFC.Summary.Catch, LBData.1981.2021, LB.ShortForm.with.Hake.Strat.Ves.num.Mackerel)
+    Compare.Raw.LogB.to.Proc.Data.and.FT('SABL', c('W', 'O', 'C'), PacFIN.SABL.Catch.List.12.Aug.2022$CompFT, LBData.1981.2021, LB.ShortForm.with.Hake.Strat.Ves.num.Mackerel)
     
-    Compare.Raw.LogB.to.Proc.Data.and.FT('SABL', 'W', PacFIN.SABL.Catch.List.12.Aug.2022$PacFIN.PSMFC.Summary.Catch, LBData.1981.2021, LB.ShortForm.with.Hake.Strat.Ves.num.Mackerel)
-    Compare.Raw.LogB.to.Proc.Data.and.FT('SABL', 'O', PacFIN.SABL.Catch.List.12.Aug.2022$PacFIN.PSMFC.Summary.Catch, LBData.1981.2021, LB.ShortForm.with.Hake.Strat.Ves.num.Mackerel)
-    Compare.Raw.LogB.to.Proc.Data.and.FT('SABL', 'C', PacFIN.SABL.Catch.List.12.Aug.2022$PacFIN.PSMFC.Summary.Catch, LBData.1981.2021, LB.ShortForm.with.Hake.Strat.Ves.num.Mackerel)
+    Compare.Raw.LogB.to.Proc.Data.and.FT('SABL', 'W', PacFIN.SABL.Catch.List.12.Aug.2022$CompFT, LBData.1981.2021, LB.ShortForm.with.Hake.Strat.Ves.num.Mackerel)
+    Compare.Raw.LogB.to.Proc.Data.and.FT('SABL', 'O', PacFIN.SABL.Catch.List.12.Aug.2022$CompFT, LBData.1981.2021, LB.ShortForm.with.Hake.Strat.Ves.num.Mackerel)
+    Compare.Raw.LogB.to.Proc.Data.and.FT('SABL', 'C', PacFIN.SABL.Catch.List.12.Aug.2022$CompFT, LBData.1981.2021, LB.ShortForm.with.Hake.Strat.Ves.num.Mackerel)
 
-    # --- Skates ---
+    # -- Skates --
+     # Fishticket data for the given species group
      PacFIN.Longnose.Catch.List.22.Jul.2022 <- PacFIN.Catch.Extraction("('LSKT')")
      PacFIN.BigSkate.Catch.List.22.Jul.2022 <- PacFIN.Catch.Extraction("('BSKT', 'BSK1')")
      PacFIN.USKT.Catch.List.22.Jul.2022 <- PacFIN.Catch.Extraction("('USKT')")
      # PacFIN.CSKT.Catch.List.11.Aug.2022 <- PacFIN.Catch.Extraction("('CSKT')")
      # PacFIN.OSKT.Catch.List.11.Aug.2022 <- PacFIN.Catch.Extraction("('OSKT')")
+         
+     PacFIN.3.skates.CompFT <- rbind(PacFIN.Longnose.Catch.List.22.Jul.2022$CompFT, PacFIN.BigSkate.Catch.List.22.Jul.2022$CompFT, 
+                                                   PacFIN.USKT.Catch.List.22.Jul.2022$CompFT)
      
-     load("W:\\ALL_USR\\JRW\\PacFIN & RACEBASE.R\\DATA to Others\\2022\\Skate Catch Data to Vlada\\PacFIN.BigSkate.Catch.List.22.Jul.2022.RData")
-     load("W:\\ALL_USR\\JRW\\PacFIN & RACEBASE.R\\DATA to Others\\2022\\Skate Catch Data to Vlada\\PacFIN.Longnose.Catch.List.22.Jul.2022.RData")
-     load("W:\\ALL_USR\\JRW\\PacFIN & RACEBASE.R\\DATA to Others\\2022\\Skate Catch Data to Vlada\\PacFIN.USKT.Catch.List.22.Jul.2022.RData")
+     Compare.Raw.LogB.to.Proc.Data.and.FT(c('LSKT', 'BSKT', 'USKT'), c('W', 'O', 'C'), PacFIN.3.skates.CompFT, LBData.1981.2021, LB.ShortForm.with.Hake.Strat.Ves.num.Mackerel)
      
-     PacFIN.3.skates.PacFIN.PSMFC.Summary.Catch <- rbind(PacFIN.Longnose.Catch.List.22.Jul.2022$PacFIN.PSMFC.Summary.Catch, PacFIN.BigSkate.Catch.List.22.Jul.2022$PacFIN.PSMFC.Summary.Catch, 
-                                                   PacFIN.USKT.Catch.List.22.Jul.2022$PacFIN.PSMFC.Summary.Catch)
+     Compare.Raw.LogB.to.Proc.Data.and.FT(c('LSKT', 'BSKT', 'USKT'), 'W', PacFIN.3.skates.CompFT, LBData.1981.2021, LB.ShortForm.with.Hake.Strat.Ves.num.Mackerel)
+     Compare.Raw.LogB.to.Proc.Data.and.FT(c('LSKT', 'BSKT', 'USKT'), 'O', PacFIN.3.skates.CompFT, LBData.1981.2021, LB.ShortForm.with.Hake.Strat.Ves.num.Mackerel)
+     Compare.Raw.LogB.to.Proc.Data.and.FT(c('LSKT', 'BSKT', 'USKT'), 'C', PacFIN.3.skates.CompFT, LBData.1981.2021, LB.ShortForm.with.Hake.Strat.Ves.num.Mackerel)
      
-     Compare.Raw.LogB.to.Proc.Data.and.FT(c('LSKT', 'BSKT', 'USKT'), c('W', 'O', 'C'), PacFIN.3.skates.PacFIN.PSMFC.Summary.Catch, LBData.1981.2021, LB.ShortForm.with.Hake.Strat.Ves.num.Mackerel)
      
-     Compare.Raw.LogB.to.Proc.Data.and.FT(c('LSKT', 'BSKT', 'USKT'), 'W', PacFIN.3.skates.PacFIN.PSMFC.Summary.Catch, LBData.1981.2021, LB.ShortForm.with.Hake.Strat.Ves.num.Mackerel)
-     Compare.Raw.LogB.to.Proc.Data.and.FT(c('LSKT', 'BSKT', 'USKT'), 'O', PacFIN.3.skates.PacFIN.PSMFC.Summary.Catch, LBData.1981.2021, LB.ShortForm.with.Hake.Strat.Ves.num.Mackerel)
-     Compare.Raw.LogB.to.Proc.Data.and.FT(c('LSKT', 'BSKT', 'USKT'), 'C', PacFIN.3.skates.PacFIN.PSMFC.Summary.Catch, LBData.1981.2021, LB.ShortForm.with.Hake.Strat.Ves.num.Mackerel)
+     # --- Use Agency ID (AGID) instead of State.Lat in the Processed Logbook data ---
+     
+     # -- Sablefish --
+     Compare.Raw.LogB.to.Proc.Data.and.FT('SABL', c('W', 'O', 'C'), PacFIN.SABL.Catch.List.12.Aug.2022$CompFT, LBData.1981.2021, LB.ShortForm.with.Hake.Strat.Ves.num.Mackerel, State.Lat = FALSE)
+     
+     Compare.Raw.LogB.to.Proc.Data.and.FT('SABL', 'W', PacFIN.SABL.Catch.List.12.Aug.2022$CompFT, LBData.1981.2021, LB.ShortForm.with.Hake.Strat.Ves.num.Mackerel, State.Lat = FALSE)
+     Compare.Raw.LogB.to.Proc.Data.and.FT('SABL', 'O', PacFIN.SABL.Catch.List.12.Aug.2022$CompFT, LBData.1981.2021, LB.ShortForm.with.Hake.Strat.Ves.num.Mackerel, State.Lat = FALSE)
+     Compare.Raw.LogB.to.Proc.Data.and.FT('SABL', 'C', PacFIN.SABL.Catch.List.12.Aug.2022$CompFT, LBData.1981.2021, LB.ShortForm.with.Hake.Strat.Ves.num.Mackerel, State.Lat = FALSE)
+     
+     
+     # -- Skates --
+     Compare.Raw.LogB.to.Proc.Data.and.FT(c('LSKT', 'BSKT', 'USKT'), c('W', 'O', 'C'), PacFIN.3.skates.CompFT, LBData.1981.2021, LB.ShortForm.with.Hake.Strat.Ves.num.Mackerel, State.Lat = FALSE)
+      
+     Compare.Raw.LogB.to.Proc.Data.and.FT(c('LSKT', 'BSKT', 'USKT'), 'W', PacFIN.3.skates.CompFT, LBData.1981.2021, LB.ShortForm.with.Hake.Strat.Ves.num.Mackerel, State.Lat = FALSE)
+     Compare.Raw.LogB.to.Proc.Data.and.FT(c('LSKT', 'BSKT', 'USKT'), 'O', PacFIN.3.skates.CompFT, LBData.1981.2021, LB.ShortForm.with.Hake.Strat.Ves.num.Mackerel, State.Lat = FALSE)
+     Compare.Raw.LogB.to.Proc.Data.and.FT(c('LSKT', 'BSKT', 'USKT'), 'C', PacFIN.3.skates.CompFT, LBData.1981.2021, LB.ShortForm.with.Hake.Strat.Ves.num.Mackerel, State.Lat = FALSE)
      

@@ -15,6 +15,8 @@ Using the PacFIN.Catch.Extraction() function from the <John-R-Wallace-NOAA/PacFI
     LB.ShortForm.with.Hake.Strat.Ves.num.Mackerel$State.Lat[LB.ShortForm.with.Hake.Strat.Ves.num.Mackerel$SET_LAT < 42] <- 'C'
     Table(LB.ShortForm.with.Hake.Strat.Ves.num.Mackerel$State.Lat, LB.ShortForm.with.Hake.Strat.Ves.num.Mackerel$AGID)
     
+    # --- Use State.Lat in the Processed Logbook data ---
+    
     # -- Sablefish --
     
     # Fishticket data for the given species

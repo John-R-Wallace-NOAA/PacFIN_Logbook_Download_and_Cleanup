@@ -1,15 +1,26 @@
 
-Compare.Raw.LogB.to.Proc.Data.and.FT <- function(SPID, State, FT_Data, LB_Raw, LB_Proc)   {
+Compare.Raw.LogB.to.Proc.Data.and.FT <- function(SPID, State, CompFT, LB_Raw, LB_Proc, State.Lat = TRUE)   {
     
    library(JRWToolBox)    
     
    # Fishticket 
-   FT_Data <- FT_Data[FT_Data$PACFIN_GROUP_GEAR_CODE %in% 'TWL' & FT_Data$PACFIN_PORT_CODE %in% recode.simple(State, cbind(c('C', 'O', 'W'), c('ACA', 'AOR', 'AWA'))), ] # Tribal and research data already removed in summary catch
-   cat("\n"); print(Table(FT_Data$PACFIN_PORT_CODE))    
+   # **** As mentioned in PacFIN.Catch.Extraction()), the summary catch (sc) PacFIN has this strangeness of retaining the name PACFIN_PORT_CODE when it only contains WA, OR, and CA port groups. **** 
+   # **** The PacFIN.PSMFC.Summary.Catch continues this legacy coding choice. ****
+      
+   # ------------------------------------------- PSMFC Summary Catch Table without both research (R) and tribal data (TI) ---------------------------------------------------------------- 
+   CompFT.PSMFC <- CompFT[!CompFT$REMOVAL_TYPE_CODE %in% "R" & !CompFT$FLEET_CODE %in% "TI" & 
+            CompFT$PACFIN_CATCH_AREA_CODE %in% c("UP","1A", "1B", "MNTREY BAY", "1E", "1C", "2A", "2B", "2C", "2E", "2F", "2D", "3A", "3B", "3C-S"), ]
+   CompFT.PSMFC$PACFIN_PORT_CODE <- CompFT.PSMFC$W_O_C_Port_Groups
+   PacFIN.PSMFC.Summary.Catch <- aggregate(list(ROUND_WEIGHT_MTONS = CompFT.PSMFC$ROUND_WEIGHT_MTONS), CompFT.PSMFC[, c('COUNCIL_CODE', 'DAHL_GROUNDFISH_CODE', 'LANDING_YEAR', 'LANDING_MONTH',
+                                                         'PACFIN_SPECIES_CODE', 'PACFIN_CATCH_AREA_CODE', 'PACFIN_GEAR_CODE', 'PACFIN_GROUP_GEAR_CODE', 'PACFIN_PORT_CODE')], sum, na.rm = TRUE)
+   PacFIN.PSMFC.Summary.Catch <- sort.f(PacFIN.PSMFC.Summary.Catch, c('LANDING_YEAR', 'LANDING_MONTH', 'PACFIN_CATCH_AREA_CODE', 'PACFIN_GEAR_CODE', 'PACFIN_PORT_CODE'))
+   PacFIN.PSMFC.Summary.Catch <- PacFIN.PSMFC.Summary.Catch[PacFIN.PSMFC.Summary.Catch$PACFIN_GROUP_GEAR_CODE %in% 'TWL' & 
+         PacFIN.PSMFC.Summary.Catch$PACFIN_PORT_CODE %in% recode.simple(State, cbind(c('C', 'O', 'W'), c('ACA', 'AOR', 'AWA'))), ] 
+   cat("\n"); print(Table(PacFIN.PSMFC.Summary.Catch$PACFIN_PORT_CODE))    
        
-   # FT.Data.Agg <- aggregate(list(FTmt = FT_Data$CATCH.LBS/2204.6), list(Year = FT_Data$LANDING_YEAR), sum, na.rm = TRUE)
-   # FT.Data.Agg <- aggregate(list(FT.mt = FT_Data$LWT_LBS/2204.6), list(Year = FT_Data$LANDING_YEAR), sum, na.rm = TRUE)
-   FT.Data.Agg <- aggregate(list(FT.mt = FT_Data$ROUND_WEIGHT_MTONS), list(Year = FT_Data$LANDING_YEAR), sum, na.rm = TRUE)
+   # FT.Data.Agg <- aggregate(list(FTmt = PacFIN.PSMFC.Summary.Catch$CATCH.LBS/2204.6), list(Year = PacFIN.PSMFC.Summary.Catch$LANDING_YEAR), sum, na.rm = TRUE)
+   # FT.Data.Agg <- aggregate(list(FT.mt = PacFIN.PSMFC.Summary.Catch$LWT_LBS/2204.6), list(Year = PacFIN.PSMFC.Summary.Catch$LANDING_YEAR), sum, na.rm = TRUE)
+   FT.Data.Agg <- aggregate(list(FT.mt = PacFIN.PSMFC.Summary.Catch$ROUND_WEIGHT_MTONS), list(Year = PacFIN.PSMFC.Summary.Catch$LANDING_YEAR), sum, na.rm = TRUE)
    cat("\n"); print(FT.Data.Agg[1:4, ]); cat("\n\n")
 
    # Raw Logbook
@@ -25,9 +36,13 @@ Compare.Raw.LogB.to.Proc.Data.and.FT <- function(SPID, State, FT_Data, LB_Raw, L
       
    # Processed Logbook
    # Only need to remove area 4A here due to a few bad lat/long locations
-   LB_Proc$AGID <- as.character(LB_Proc$AGID)
-   LB_Proc <- LB_Proc[LB_Proc$AGID %in% State & !is.na(LB_Proc$AGID) & !LB_Proc$ARID_PSMFC %in% '4A' &  !is.na(LB_Proc$ARID_PSMFC) , ]
-   cat("\n"); print(Table(LB_Proc$ARID_PSMFC)); print(Table(LB_Proc$AGID))
+   if(State.Lat) {
+      LB_Proc <- LB_Proc[LB_Proc$State.Lat %in% State & !is.na(LB_Proc$State.Lat) & !LB_Proc$ARID_PSMFC %in% '4A' &  !is.na(LB_Proc$ARID_PSMFC) , ]
+      cat("\n"); print(Table(LB_Proc$ARID_PSMFC)); print(Table(LB_Proc$State.Lat))
+   } else {
+      LB_Proc <- LB_Proc[LB_Proc$AGID %in% State & !is.na(LB_Proc$AGID) & !LB_Proc$ARID_PSMFC %in% '4A' &  !is.na(LB_Proc$ARID_PSMFC) , ]
+      cat("\n"); print(Table(LB_Proc$ARID_PSMFC)); print(Table(LB_Proc$AGID))
+   }
    
    # SP.col <- colnames(LB_Proc)[grep(SPID, colnames(LB_Proc))]
    SP.col <- paste0(SPID, ".kg")
@@ -47,3 +62,4 @@ Compare.Raw.LogB.to.Proc.Data.and.FT <- function(SPID, State, FT_Data, LB_Raw, L
    
    JRWToolBox::r(FT.LB.Raw.LB.Proc, 3)
 }
+

@@ -1,6 +1,6 @@
 Using the PacFIN.Catch.Extraction() function from the <John-R-Wallace-NOAA/PacFIN-Data-Extraction> repo, and products derived from this PacFIN Logbook repo, the Compare.Raw.LogB.to.Proc.Data.and.FT() function (in the R folder) compares raw and processed logbook data to PacFIN fishticket data. 
 
-Disclaimer: The highly aggregated data shown below far surpasses the 3-vessel rule of confidentiality and is given for illustrative purposes only. The data is neither vetted nor verified. 
+Disclaimer: The highly aggregated data shown below far surpasses the 3-vessel rule of confidentiality and is given for illustrative purposes only. The data is neither vetted nor verified. For offical data reports and information on PacFIN see https://pacfin.psmfc.org/
 
     PacFIN.Login <- UID <- "wallacej"
     PacFIN.PW <- PWD <- "*********"

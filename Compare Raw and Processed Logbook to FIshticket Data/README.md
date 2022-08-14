@@ -23,8 +23,7 @@ Using the PacFIN.Catch.Extraction() function from the <John-R-Wallace-NOAA/PacFI
     State.Lat  O  12633 270286   7378
                W      0 148314 138309
       
-    
-    
+     
     # --- Use State.Lat in the Processed Logbook data ---
     
     # -- Sablefish --

@@ -12,6 +12,7 @@ Disclaimer: The highly aggregated data shown below far surpasses the 3-vessel ru
     base::load("LB.ShortForm.with.Hake.Strat.Ves.num.Mackerel 26 May 2022.RData")
     LB.ShortForm.with.Hake.Strat.Ves.num.Mackerel$AGID <- as.character(LB.ShortForm.with.Hake.Strat.Ves.num.Mackerel$AGID)
     
+    # State.Lat is easily dervived from the SET_LAT and gives the state waters where the logbook tow was set.
     LB.ShortForm.with.Hake.Strat.Ves.num.Mackerel$State.Lat <- 'W'
     LB.ShortForm.with.Hake.Strat.Ves.num.Mackerel$State.Lat[LB.ShortForm.with.Hake.Strat.Ves.num.Mackerel$SET_LAT < 46 + 16/60] <- 'O'
     LB.ShortForm.with.Hake.Strat.Ves.num.Mackerel$State.Lat[LB.ShortForm.with.Hake.Strat.Ves.num.Mackerel$SET_LAT < 42] <- 'C'

@@ -35,8 +35,7 @@ Using the PacFIN.Catch.Extraction() function from the <John-R-Wallace-NOAA/PacFI
      # PacFIN.CSKT.Catch.List.11.Aug.2022 <- PacFIN.Catch.Extraction("('CSKT')")
      # PacFIN.OSKT.Catch.List.11.Aug.2022 <- PacFIN.Catch.Extraction("('OSKT')")
          
-     PacFIN.3.skates.CompFT <- rbind(PacFIN.Longnose.Catch.List.22.Jul.2022$CompFT, PacFIN.BigSkate.Catch.List.22.Jul.2022$CompFT, 
-                                                   PacFIN.USKT.Catch.List.22.Jul.2022$CompFT)
+     PacFIN.3.skates.CompFT <- rbind(PacFIN.Longnose.Catch.List.22.Jul.2022$CompFT, PacFIN.BigSkate.Catch.List.22.Jul.2022$CompFT, PacFIN.USKT.Catch.List.22.Jul.2022$CompFT)
      
      Compare.Raw.LogB.to.Proc.Data.and.FT(c('LSKT', 'BSKT', 'USKT'), c('W', 'O', 'C'), PacFIN.3.skates.CompFT, LBData.1981.2021, LB.ShortForm.with.Hake.Strat.Ves.num.Mackerel)
      

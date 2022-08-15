@@ -28,7 +28,7 @@ Using the PacFIN.Catch.Extraction() function from the <John-R-Wallace-NOAA/PacFI
     # Fishticket data for the given species
     PacFIN.SABL.Catch.List.12.Aug.2022 <- PacFIN.Catch.Extraction("('SABL')")
     
-    # -- Using all Coast Wide Data --
+    # -- Use all Coast Wide Data --
     Compare.Raw.LogB.to.Proc.Data.and.FT('SABL', c('W', 'O', 'C'), PacFIN.SABL.Catch.List.12.Aug.2022$CompFT, LBData.1981.2021, LB.ShortForm.with.Hake.Strat.Ves.num.Mackerel)
     
     # -- Use State.Lat in the Processed Logbook data --
@@ -53,7 +53,7 @@ Using the PacFIN.Catch.Extraction() function from the <John-R-Wallace-NOAA/PacFI
      
     PacFIN.3.skates.CompFT <- rbind(PacFIN.Longnose.Catch.List.22.Jul.2022$CompFT, PacFIN.BigSkate.Catch.List.22.Jul.2022$CompFT, PacFIN.USKT.Catch.List.22.Jul.2022$CompFT)
      
-    # -- Using all Coast Wide Data --  
+    # -- Use all Coast Wide Data --  
     Compare.Raw.LogB.to.Proc.Data.and.FT(c('LSKT', 'BSKT', 'USKT'), c('W', 'O', 'C'), PacFIN.3.skates.CompFT, LBData.1981.2021, LB.ShortForm.with.Hake.Strat.Ves.num.Mackerel)
      
     # -- Use State.Lat in the Processed Logbook data --

@@ -36,7 +36,7 @@ Using the PacFIN.Catch.Extraction() function from the <John-R-Wallace-NOAA/PacFI
     Compare.Raw.LogB.to.Proc.Data.and.FT('SABL', 'O', PacFIN.SABL.Catch.List.12.Aug.2022$CompFT, LBData.1981.2021, LB.ShortForm.with.Hake.Strat.Ves.num.Mackerel)
     Compare.Raw.LogB.to.Proc.Data.and.FT('SABL', 'C', PacFIN.SABL.Catch.List.12.Aug.2022$CompFT, LBData.1981.2021, LB.ShortForm.with.Hake.Strat.Ves.num.Mackerel)
 
-    # -- Use Agency ID (AGID) instead of State.Lat in the Processed Logbook data --
+    # -- Use Agency ID (AGID) in the Processed Logbook data --
      Compare.Raw.LogB.to.Proc.Data.and.FT('SABL', 'W', PacFIN.SABL.Catch.List.12.Aug.2022$CompFT, LBData.1981.2021, LB.ShortForm.with.Hake.Strat.Ves.num.Mackerel, State.Lat = FALSE)
      Compare.Raw.LogB.to.Proc.Data.and.FT('SABL', 'O', PacFIN.SABL.Catch.List.12.Aug.2022$CompFT, LBData.1981.2021, LB.ShortForm.with.Hake.Strat.Ves.num.Mackerel, State.Lat = FALSE)
      Compare.Raw.LogB.to.Proc.Data.and.FT('SABL', 'C', PacFIN.SABL.Catch.List.12.Aug.2022$CompFT, LBData.1981.2021, LB.ShortForm.with.Hake.Strat.Ves.num.Mackerel, State.Lat = FALSE)
@@ -61,7 +61,7 @@ Using the PacFIN.Catch.Extraction() function from the <John-R-Wallace-NOAA/PacFI
     Compare.Raw.LogB.to.Proc.Data.and.FT(c('LSKT', 'BSKT', 'USKT'), 'O', PacFIN.3.skates.CompFT, LBData.1981.2021, LB.ShortForm.with.Hake.Strat.Ves.num.Mackerel)
     Compare.Raw.LogB.to.Proc.Data.and.FT(c('LSKT', 'BSKT', 'USKT'), 'C', PacFIN.3.skates.CompFT, LBData.1981.2021, LB.ShortForm.with.Hake.Strat.Ves.num.Mackerel)
   
-    # -- Use Agency ID (AGID) instead of State.Lat in the Processed Logbook data --
+    # -- Use Agency ID (AGID) in the Processed Logbook data --
     Compare.Raw.LogB.to.Proc.Data.and.FT(c('LSKT', 'BSKT', 'USKT'), 'W', PacFIN.3.skates.CompFT, LBData.1981.2021, LB.ShortForm.with.Hake.Strat.Ves.num.Mackerel, State.Lat = FALSE)
     Compare.Raw.LogB.to.Proc.Data.and.FT(c('LSKT', 'BSKT', 'USKT'), 'O', PacFIN.3.skates.CompFT, LBData.1981.2021, LB.ShortForm.with.Hake.Strat.Ves.num.Mackerel, State.Lat = FALSE)
     Compare.Raw.LogB.to.Proc.Data.and.FT(c('LSKT', 'BSKT', 'USKT'), 'C', PacFIN.3.skates.CompFT, LBData.1981.2021, LB.ShortForm.with.Hake.Strat.Ves.num.Mackerel, State.Lat = FALSE)

@@ -1,4 +1,5 @@
-Compare.Raw.LogB.to.Proc.Data.and.FT <- function(SPID, State, CompFT, LB_Raw, LB_Proc, State.Lat = TRUE, verbose = TRUE)   {
+
+Compare.Raw.LogB.to.Proc.Data.and.FT <- function(SPID, State, CompFT, LB_Raw, LB_Proc, State.Lat = TRUE, Years = NULL, verbose = FALSE)   {
     
    library(JRWToolBox)    
     
@@ -8,7 +9,7 @@ Compare.Raw.LogB.to.Proc.Data.and.FT <- function(SPID, State, CompFT, LB_Raw, LB
       
    # ------------------------------------------- PSMFC Summary Catch Table without research (R) nor tribal data (TI) ---------------------------------------------------------------- 
    CompFT.PSMFC <- CompFT[!CompFT$REMOVAL_TYPE_CODE %in% "R" & !CompFT$FLEET_CODE %in% "TI" & 
-            CompFT$PACFIN_CATCH_AREA_CODE %in% c("UP","1A", "1B", "MNTREY BAY", "1E", "1C", "2A", "2B", "2C", "2E", "2F", "2D", "3A", "3B", "3C-S"), ]
+              CompFT$PACFIN_CATCH_AREA_CODE %in% c("UP","1A", "1B", "MNTREY BAY", "1E", "1C", "2A", "2B", "2C", "2E", "2F", "2D", "3A", "3B", "3C-S"), ]
    CompFT.PSMFC$PACFIN_PORT_CODE <- CompFT.PSMFC$W_O_C_Port_Groups # W_O_C_Port_Groups is derived from CompFT$AGENCY_CODE within PacFIN.Catch.Extraction()
    PacFIN.PSMFC.Summary.Catch <- aggregate(list(ROUND_WEIGHT_MTONS = CompFT.PSMFC$ROUND_WEIGHT_MTONS), CompFT.PSMFC[, c('COUNCIL_CODE', 'DAHL_GROUNDFISH_CODE', 'LANDING_YEAR', 'LANDING_MONTH',
                                                          'PACFIN_SPECIES_CODE', 'PACFIN_CATCH_AREA_CODE', 'PACFIN_GEAR_CODE', 'PACFIN_GROUP_GEAR_CODE', 'PACFIN_PORT_CODE')], sum, na.rm = TRUE)
@@ -20,6 +21,10 @@ Compare.Raw.LogB.to.Proc.Data.and.FT <- function(SPID, State, CompFT, LB_Raw, LB
    # FT.Data.Agg <- aggregate(list(FTmt = PacFIN.PSMFC.Summary.Catch$CATCH.LBS/2204.6), list(Year = PacFIN.PSMFC.Summary.Catch$LANDING_YEAR), sum, na.rm = TRUE)
    # FT.Data.Agg <- aggregate(list(FT.mt = PacFIN.PSMFC.Summary.Catch$LWT_LBS/2204.6), list(Year = PacFIN.PSMFC.Summary.Catch$LANDING_YEAR), sum, na.rm = TRUE)
    FT.Data.Agg <- aggregate(list(FT.mt = PacFIN.PSMFC.Summary.Catch$ROUND_WEIGHT_MTONS), list(Year = PacFIN.PSMFC.Summary.Catch$LANDING_YEAR), sum, na.rm = TRUE)
+   if(is.null(Years))
+      Years <- min(FT.Data.Agg$Year, na.rm = TRUE):max(FT.Data.Agg$Year, na.rm = TRUE)
+   FT.Data.Agg <- JRWToolBox::match.f(data.frame(Year = Years), FT.Data.Agg, 'Year', 'Year', 'FT.mt')
+   FT.Data.Agg$FT.mt[is.na(FT.Data.Agg$FT.mt)] <- 0
    if(verbose) { cat("\n"); print(FT.Data.Agg[1:4, ]); cat("\n\n") }
 
    # Raw Logbook

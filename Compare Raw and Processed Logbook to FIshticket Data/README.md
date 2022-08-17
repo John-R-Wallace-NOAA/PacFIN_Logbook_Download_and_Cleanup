@@ -1,4 +1,4 @@
-Using the PacFIN.Catch.Extraction() function from the <John-R-Wallace-NOAA/PacFIN-Data-Extraction> repo, and products derived from this PacFIN Logbook repo, the Compare.Raw.LogB.to.Proc.Data.and.FT() function (in the R folder) compares raw and processed logbook data to PacFIN fish ticket data. When TRUE (the default) the argument PSMFC.Summary.Fleet will print (and return invisibly) the aggregated PSMFC data by year and fleet.
+Using the PacFIN.Catch.Extraction() function from the <John-R-Wallace-NOAA/PacFIN-Data-Extraction> repo, and products derived from this PacFIN Logbook repo, the Compare.Raw.LogB.to.Proc.Data.and.FT() function (in the R folder) compares raw and processed trawl logbook data to PacFIN fish ticket data. When TRUE (the default) the argument PSMFC.Summary.Fleet will print (and return invisibly) the aggregated PSMFC trawl data by year and fleet.
 
 
     PacFIN.Login <- "wallacej"

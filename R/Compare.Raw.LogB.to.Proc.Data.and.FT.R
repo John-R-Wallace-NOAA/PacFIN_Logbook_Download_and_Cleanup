@@ -1,5 +1,5 @@
 
-Compare.Raw.LogB.to.Proc.Data.and.FT <- function(SPID, State, CompFT, LB_Raw, LB_Proc, State.Lat = TRUE, Years = NULL, verbose = FALSE)   {
+Compare.Raw.LogB.to.Proc.Data.and.FT <- function(SPID, State, CompFT, LB_Raw, LB_Proc, State.Lat = TRUE, Years = NULL, PSMFC.Summary.Fleet = TRUE, verbose = FALSE)   {
     
    library(JRWToolBox)    
     
@@ -69,5 +69,23 @@ Compare.Raw.LogB.to.Proc.Data.and.FT <- function(SPID, State, CompFT, LB_Raw, LB
    else    
        cat(paste0("\n\n", paste(SPID, collapse = " "), ": ", paste(State, collapse = " "), ": Using ", ifelse(State.Lat, "State.Lat", "AGID") ," from the Processed Logbook Data", "\n\n"))
        
-   JRWToolBox::r(FT.LB.Raw.LB.Proc, 3)
+   print(JRWToolBox::r(FT.LB.Raw.LB.Proc, 3)); cat("\n\n")
+   
+   if(PSMFC.Summary.Fleet) {
+       # ------------------------------------------- PSMFC Summary Catch Table with Fleet Information ---------------------------------------------------------------- 
+       CompFT.PSMFC <- CompFT[CompFT$PACFIN_CATCH_AREA_CODE %in% c("UP","1A", "1B", "MNTREY BAY", "1E", "1C", "2A", "2B", "2C", "2E", "2F", "2D", "3A", "3B", "3C-S"), ]
+       CompFT.PSMFC$PACFIN_PORT_CODE <- CompFT.PSMFC$W_O_C_Port_Groups # W_O_C_Port_Groups is derived from CompFT$AGENCY_CODE within PacFIN.Catch.Extraction()
+       PacFIN.PSMFC.Summary.Catch <- aggregate(list(ROUND_WEIGHT_MTONS = CompFT.PSMFC$ROUND_WEIGHT_MTONS), CompFT.PSMFC[, c('COUNCIL_CODE', 'DAHL_GROUNDFISH_CODE', 'FLEET_CODE', 'LANDING_YEAR', 'LANDING_MONTH',
+                                                             'PACFIN_SPECIES_CODE', 'PACFIN_CATCH_AREA_CODE', 'PACFIN_GEAR_CODE', 'PACFIN_GROUP_GEAR_CODE', 'PACFIN_PORT_CODE')], sum, na.rm = TRUE)
+       PacFIN.PSMFC.Summary.Catch <- sort.f(PacFIN.PSMFC.Summary.Catch, c('FLEET_CODE', 'LANDING_YEAR', 'LANDING_MONTH', 'PACFIN_CATCH_AREA_CODE', 'PACFIN_GEAR_CODE', 'PACFIN_PORT_CODE'))
+       PacFIN.PSMFC.Summary.Catch <- PacFIN.PSMFC.Summary.Catch[PacFIN.PSMFC.Summary.Catch$PACFIN_GROUP_GEAR_CODE %in% 'TWL' & 
+             PacFIN.PSMFC.Summary.Catch$PACFIN_PORT_CODE %in% recode.simple(State, cbind(c('C', 'O', 'W'), c('ACA', 'AOR', 'AWA'))), ]
+       FT.Data.Agg <- JRWToolBox::agg.table(aggregate(list(FT.mt = PacFIN.PSMFC.Summary.Catch$ROUND_WEIGHT_MTONS), list(Year = PacFIN.PSMFC.Summary.Catch$LANDING_YEAR, 
+                    Fleet = PacFIN.PSMFC.Summary.Catch$FLEET_CODE), sum, na.rm = TRUE), Print = FALSE)   
+       FT.Data.Agg <- FT.Data.Agg[is.na(FT.Data.Agg)] <- 0
+       print(JRWToolBox::r(FT.Data.Agg, 3)); cat("\n\n")
+       invisible(list(FT.LB.Raw.LB.Proc = FT.LB.Raw.LB.Proc, FT.Data.Agg = FT.Data.Agg))
+   } else
+     invisible(FT.LB.Raw.LB.Proc)
 }
+

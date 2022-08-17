@@ -1,9 +1,10 @@
 
+
 Compare.Raw.LogB.to.Proc.Data.and.FT <- function(SPID, State, CompFT, LB_Raw, LB_Proc, State.Lat = TRUE, Years = NULL, PSMFC.Summary.Fleet = TRUE, verbose = FALSE)   {
     
    library(JRWToolBox)    
     
-   # Fishticket 
+   # Fish ticket 
    # **** As mentioned in PacFIN.Catch.Extraction()), the summary catch (sc) PacFIN has this strangeness of retaining the name PACFIN_PORT_CODE when it only contains WA, OR, and CA port groups. **** 
    # **** The PacFIN.PSMFC.Summary.Catch continues this legacy coding choice. ****
       
@@ -81,9 +82,7 @@ Compare.Raw.LogB.to.Proc.Data.and.FT <- function(SPID, State, CompFT, LB_Raw, LB
        PacFIN.PSMFC.Summary.Catch <- PacFIN.PSMFC.Summary.Catch[PacFIN.PSMFC.Summary.Catch$PACFIN_GROUP_GEAR_CODE %in% 'TWL' & 
              PacFIN.PSMFC.Summary.Catch$PACFIN_PORT_CODE %in% recode.simple(State, cbind(c('C', 'O', 'W'), c('ACA', 'AOR', 'AWA'))), ]
        FT.Data.Agg <- JRWToolBox::agg.table(aggregate(list(FT.mt = PacFIN.PSMFC.Summary.Catch$ROUND_WEIGHT_MTONS), list(Year = PacFIN.PSMFC.Summary.Catch$LANDING_YEAR, 
-                    Fleet = PacFIN.PSMFC.Summary.Catch$FLEET_CODE), sum, na.rm = TRUE), Print = FALSE)   
-       FT.Data.Agg[is.na(FT.Data.Agg)] <- 0
-       print(JRWToolBox::r(FT.Data.Agg, 3)); cat("\n\n")
+                    Fleet = PacFIN.PSMFC.Summary.Catch$FLEET_CODE), sum, na.rm = TRUE), digits = 3, rows.as.col = TRUE, NA.to.zeros = TRUE)   
        invisible(list(FT.LB.Raw.LB.Proc = FT.LB.Raw.LB.Proc, FT.Data.Agg = FT.Data.Agg))
    } else
      invisible(FT.LB.Raw.LB.Proc)

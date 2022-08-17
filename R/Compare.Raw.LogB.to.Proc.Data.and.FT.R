@@ -82,7 +82,7 @@ Compare.Raw.LogB.to.Proc.Data.and.FT <- function(SPID, State, CompFT, LB_Raw, LB
              PacFIN.PSMFC.Summary.Catch$PACFIN_PORT_CODE %in% recode.simple(State, cbind(c('C', 'O', 'W'), c('ACA', 'AOR', 'AWA'))), ]
        FT.Data.Agg <- JRWToolBox::agg.table(aggregate(list(FT.mt = PacFIN.PSMFC.Summary.Catch$ROUND_WEIGHT_MTONS), list(Year = PacFIN.PSMFC.Summary.Catch$LANDING_YEAR, 
                     Fleet = PacFIN.PSMFC.Summary.Catch$FLEET_CODE), sum, na.rm = TRUE), Print = FALSE)   
-       FT.Data.Agg <- FT.Data.Agg[is.na(FT.Data.Agg)] <- 0
+       FT.Data.Agg[is.na(FT.Data.Agg)] <- 0
        print(JRWToolBox::r(FT.Data.Agg, 3)); cat("\n\n")
        invisible(list(FT.LB.Raw.LB.Proc = FT.LB.Raw.LB.Proc, FT.Data.Agg = FT.Data.Agg))
    } else

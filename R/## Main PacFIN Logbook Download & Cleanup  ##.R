@@ -44,7 +44,7 @@ dir.create('Funcs and Data') # If needed
 #               Add missing Latlong centroid block locations.R >> Add DepthGIS.R >> Create BestDepth and GoodTow.R
 
 # Data file names: LBData.1981.2020.RData >> LB Shortform unfiltered Dat 12 Apr 2021.RData >> LB Polygons Dat 12 Apr 2021.RData >> LB GIS Depths Dat 12 Apr 2021.RData >> LB Shortform Final Dat 12 Apr 2021.RData  >> LB ShortForm No Hake Strat 12 Apr 2021.RData
-#     LB Shortform EEZ Dat 12 Apr 2021.RData, used to be saved in 'Remove data not in the EEZ.R' for backup due to long run time, now only done as a good stopping point - fi needed.
+#     LB Shortform EEZ Dat 12 Apr 2021.RData, used to be saved in 'Remove data not in the EEZ.R' for backup due to long run times, now only done as a good stopping point - if needed.
 
 # R objects: LBData.1981.2020 >> Dat >> Dat >> LB.ShortForm >> LB.ShortForm.No.Hake.Strat 
  

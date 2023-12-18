@@ -12,9 +12,9 @@ dir.create('Funcs and Data') # If needed
 
 # GitHub, INLA, and CRAN package loads 
 
-   if (!any(installed.packages()[, 1] %in% "devtools"))  install.packages('devtools')  
+   if (!any(installed.packages()[, 1] %in% "remotes"))  install.packages('remotes')  
 
-   devtools::install_github("John-R-Wallace/JRWToolBox", quiet = T)
+   remotes::install_github("John-R-Wallace/JRWToolBox", quiet = T)
    if (!any(installed.packages()[, 1] %in% "JRWToolBox"))
        stop('JRWToolBox is not installed, an attempt to install failed (check for GitHub internet access)')
    require(JRWToolBox)

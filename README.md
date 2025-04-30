@@ -6,7 +6,7 @@ Start with '## Main PacFIN Logbook Download & Cleanup ##.R' in the R folder.
 
 To retain blank lines and comments in the source code files, please copy and paste out of GitHub using the 'Raw' mode.
 
-This dataset was used in the following papers:
+A dataset created by following this script was used in the following papers:
 
 [Stay or go? Geographic variation in risks due to climate change for fishing fleets that adapt in-place or adapt on-the-move](https://journals.plos.org/climate/article?id=10.1371/journal.pclm.0000285)
 

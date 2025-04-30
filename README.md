@@ -10,3 +10,5 @@ This dataset was used in the following papers:
 
 [Stay or go? Geographic variation in risks due to climate change for fishing fleets that adapt in-place or adapt on-the-move](https://journals.plos.org/climate/article?id=10.1371/journal.pclm.0000285)
 
+[Using age compositions derived from spatio-temporal models and acoustic data collected by uncrewed surface vessels to estimate Pacific hake (Merluccius productus) biomass-at-age](https://www.frontiersin.org/journals/marine-science/articles/10.3389/fmars.2023.1214798/full)
+
